@@ -1,13 +1,24 @@
-import {Form, FormularioContainer} from'./style';
+import {
+  Form,
+  FormularioContainer,
+  Title,
+  Button
+} from './style';
+import minhaImagem from '../assets/Logo.png';
 
 function Formulario() {
   return (
     <FormularioContainer>
-    <Form><form action="">
-        <input type="text" placeholder="Nome" />
-        <input type="email" placeholder="Email" />
-        <button type="submit">h</button>
-    </form></Form>
+      <Title>Web
+        Passos</Title>
+      <Form>
+      <form action="">
+        <label htmlFor="">Usuario</label>
+        <input type="text" placeholder="Usuario" />
+        <label htmlFor="">Senha</label>
+        <input type="password" placeholder="Senha" />
+        <Button type="submit">Entrar</Button>
+      </form></Form>
     </FormularioContainer>
   );
 }
