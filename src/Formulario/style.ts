@@ -11,7 +11,7 @@ export const FormularioContainer = styled.div`
   justify-content: center;
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   background-color: #d3d3d3ff;
   padding: 1rem;
   font-size: 1.5rem;
@@ -25,12 +25,13 @@ export const Form = styled.div`
   }
 
   label{
-  margin-top: 1rem;
+  margin-top: 2rem;
   color: #535353ff;
   }
 
   input{
     padding: 0.5rem;
+    margin-bottom: 1.5rem;
     border: 1px solid #ccc;
     border-radius: 8px;
     width: 95%;
@@ -60,11 +61,12 @@ export const Button = styled.button`
   padding: 0.5rem;
   border-radius: 12px;
   font-size: 1.5rem;
-  margin-top: 2rem;
+  margin-top: 1rem;
   font-family: 'Arial', sans-serif;
   border: none;
   cursor: pointer;
   width: 100%;
+  color: #ddddddff;
 
   &:hover {
     background-color: #c90000ff;
