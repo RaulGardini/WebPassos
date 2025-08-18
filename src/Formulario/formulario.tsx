@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Form,
   FormularioContainer,
@@ -11,6 +12,7 @@ function Formulario() {
   const [login, setLogin] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
+  const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // evita o refresh da página
@@ -21,8 +23,8 @@ function Formulario() {
         senha
       });
 
-      setMensagem("✅ Login bem-sucedido!");
       console.log("Usuário logado:", response.data.usuario);
+      navigate("/home");
 
       // 👉 aqui você poderia salvar no localStorage, por exemplo:
       // localStorage.setItem("usuario", JSON.stringify(response.data.usuario));
