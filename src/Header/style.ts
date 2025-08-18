@@ -29,7 +29,7 @@ export const RightMenu = styled.div`
 
 export const Menu = styled.div`
   width: 20%;
-  height: 12vh;
+  height: 10vh;
   display: flex;
   align-items: center;
   justify-content: center;
