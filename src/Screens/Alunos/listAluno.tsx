@@ -147,14 +147,7 @@ function ListAlunos() {
         }
         return telefone;
     };
-
-    // Função para formatar data
-    const formatDate = (dateString: string) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('pt-BR');
-    };
-
+    
     const handleDelete = async (aluno_id: number) => {
         if (!window.confirm("Tem certeza que deseja deletar este aluno?")) return;
 
