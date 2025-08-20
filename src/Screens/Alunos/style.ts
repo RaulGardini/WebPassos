@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ListAlunosContainer = styled.div`
+export const Container = styled.div`
   margin-right: 2rem;
   margin-left: 2rem;
 //   background-color: #d6d6d6ff;
@@ -10,7 +10,7 @@ export const DisplayFlex = styled.div`
   display: flex;
 `;
 
-export const AlunosTitle = styled.h1`
+export const Title = styled.h1`
   font-size: 3rem;
   margin: 0;
   margin-bottom: 0.8rem;
@@ -200,26 +200,190 @@ export const ActionButtons = styled.div`
     justify-content: center;
 `;
 
-export const ActionButton = styled.button<{ variant?: 'edit' | 'delete' }>`
-    padding: 6px 12px;
+export const EditButton = styled.button`
     border: none;
     border-radius: 4px;
+    background-color: transparent;
     cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.2s;
-    color: white;
-    
-    ${props => props.variant === 'delete' ? `
-        background-color: #dc3545;
-        
-        &:hover {
-            background-color: #c82333;
-        }
-    ` : `
-        background-color: #007bff;
-        
-        &:hover {
-            background-color: #0056b3;
-        }
-    `}
+    font-size: 1rem;
+    transition: transform 0.2s, color 0.2s;
+
+    &:hover {
+        transform: scale(1.2);
+        color: red;
+    }
+`;
+
+export const Form = styled.form`
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+`;
+
+export const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+export const FormRow = styled.div`
+  display: flex;
+  gap: 20px;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0;
+  }
+`;
+
+export const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: 600;
+`;
+
+export const Input = styled.input`
+  width: 20rem;
+  padding: 12px;
+  margin: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  &.error {
+    border-color: #dc3545;
+  }
+`;
+
+export const Select = styled.select`
+  width: 15rem;
+  margin: 1rem;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  &.error {
+    border-color: #dc3545;
+  }
+`;
+
+export const Button = styled.button`
+  background-color: #007bff;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  margin: 1rem 1rem;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+  
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+`;
+
+export const BackButton = styled.button`
+  background-color: #211F1F;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  margin: 1rem 1rem;
+
+  &:hover {
+    background-color: #494444ff;
+  }
+`;
+
+export const CancelButton = styled(Button)`
+  background-color: #6c757d;
+  
+  &:hover {
+    background-color: #545b62;
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+`;
+
+export const SuccessMessage = styled.div`
+  color: #28a745;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+`;
+
+export const LoadingSpinner = styled.div`
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+export const Message = styled.p<{ success?: boolean }>`
+  margin-top: 15px;
+  font-weight: bold;
+  color: ${({ success }) => (success ? "green" : "red")};
+`;
+
+export const Modal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const InfoModal = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  font-family: Arial, sans-serif;
 `;
