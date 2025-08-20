@@ -3,9 +3,12 @@ import Header from "../../Header/header";
 import type { Aluno, AlunoFilters } from "../../Models/alunos";
 import { IoAdd } from "react-icons/io5";
 import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiUsers } from "react-icons/fi";
+import { MdEditSquare, MdDelete } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { FaEye } from "react-icons/fa";
 import {
-    ListAlunosContainer,
-    AlunosTitle,
+    Container,
+    Title,
     DisplayFlex,
     TopLine,
     MidLine,
@@ -27,8 +30,10 @@ import {
     TableRow,
     TableCell,
     ActionButtons,
-    ActionButton,
-    ClearButton
+    ClearButton,
+    EditButton,
+    Modal,
+    InfoModal
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
 
@@ -36,6 +41,7 @@ function ListAlunos() {
     const [alunos, setAlunos] = useState<Aluno[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
     const [filters, setFilters] = useState<AlunoFilters>({
         nome: '',
         email: '',
@@ -43,6 +49,18 @@ function ListAlunos() {
         cidade: '',
         responsavel_financeiro: ''
     });
+    const [selectedAluno, setSelectedAluno] = useState<Aluno | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openAlunoModal = (aluno: Aluno) => {
+        setSelectedAluno(aluno);
+        setIsModalOpen(true);
+    };
+
+    const closeAlunoModal = () => {
+        setSelectedAluno(null);
+        setIsModalOpen(false);
+    };
 
     // Função para buscar alunos da API
     const fetchAlunos = async (searchFilters?: AlunoFilters) => {
@@ -111,9 +129,6 @@ function ListAlunos() {
         fetchAlunos(); // Busca todos os alunos novamente
     };
 
-    // Verificar se há filtros ativos
-    const hasActiveFilters = Object.values(filters).some(filter => filter.trim() !== '');
-
     // Função para formatar CPF
     const formatCpf = (cpf: string) => {
         if (!cpf) return '';
@@ -132,23 +147,50 @@ function ListAlunos() {
         }
         return telefone;
     };
+    
+    const handleDelete = async (aluno_id: number) => {
+        if (!window.confirm("Tem certeza que deseja deletar este aluno?")) return;
 
-    // Função para formatar data
-    const formatDate = (dateString: string) => {
+        try {
+            const response = await fetch(`http://localhost:3000/alunos/${aluno_id}`, {
+                method: "DELETE",
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert(errorData.message || "Erro ao deletar aluno");
+                return;
+            }
+
+            alert("Aluno deletado com sucesso!");
+
+            setAlunos((prev) => prev.filter((aluno) => aluno.aluno_id !== aluno_id));
+        } catch (error) {
+            alert("Erro de conexão com o servidor");
+        }
+    };
+
+    const calcularIdade = (dateString: string) => {
         if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('pt-BR');
+        const hoje = new Date();
+        const nascimento = new Date(dateString);
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const m = hoje.getMonth() - nascimento.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
+        }
+        return `${idade} anos`;
     };
 
     return (
         <>
             <Header />
-            <ListAlunosContainer>
+            <Container>
                 <DisplayFlex>
-                    <AlunosTitle>Alunos</AlunosTitle>
+                    <Title>Alunos</Title>
                     <TopLine></TopLine>
                 </DisplayFlex>
-                <AddButton><IoAdd />Novo</AddButton>
+                <AddButton onClick={() => navigate("/addAlunos")}><IoAdd />Novo</AddButton>
                 <MidLine></MidLine>
 
                 {/* Filtros */}
@@ -275,20 +317,24 @@ function ListAlunos() {
                                         <TableCell>{formatCpf(aluno.cpf)}</TableCell>
                                         <TableCell>{formatTelefone(aluno.telefone || '')}</TableCell>
                                         <TableCell>{aluno.cidade || '-'}</TableCell>
-                                        <TableCell>{formatDate(aluno.data_nascimento || '')}</TableCell>
+                                        <TableCell>{calcularIdade(aluno.data_nascimento || '')}</TableCell>
                                         <TableCell textAlign="center">
                                             <ActionButtons>
-                                                <ActionButton
-                                                    onClick={() => console.log('Editar aluno:', aluno.aluno_id)}
+                                                <EditButton
+                                                    onClick={() => navigate(`/updateAluno/${aluno.aluno_id}`)}
                                                 >
-                                                    Editar
-                                                </ActionButton>
-                                                <ActionButton
-                                                    variant="delete"
-                                                    onClick={() => console.log('Deletar aluno:', aluno.aluno_id)}
+                                                    <MdEditSquare />
+                                                </EditButton>
+                                                <EditButton
+                                                    onClick={() => openAlunoModal(aluno)}
                                                 >
-                                                    Deletar
-                                                </ActionButton>
+                                                    <FaEye />
+                                                </EditButton>
+                                                <EditButton
+                                                    onClick={() => handleDelete(aluno.aluno_id)}
+                                                >
+                                                    <MdDelete />
+                                                </EditButton>
                                             </ActionButtons>
                                         </TableCell>
                                     </TableRow>
@@ -297,7 +343,34 @@ function ListAlunos() {
                         </Table>
                     )}
                 </TableContainer>
-            </ListAlunosContainer>
+                {isModalOpen && selectedAluno && (
+                    <Modal>
+                        <InfoModal>
+                            <h2>Detalhes do Aluno</h2>
+                            <p><strong>Nome:</strong> {selectedAluno.nome}</p>
+                            <p><strong>Email:</strong> {selectedAluno.email}</p>
+                            <p><strong>CPF:</strong> {formatCpf(selectedAluno.cpf)}</p>
+                            <p><strong>Telefone:</strong> {formatTelefone(selectedAluno.telefone || '')}</p>
+                            <p><strong>Data Nascimento:</strong> {selectedAluno.data_nascimento}</p>
+                            <p><strong>Cidade:</strong> {selectedAluno.cidade}</p>
+                            <p><strong>Endereço:</strong> {selectedAluno.endereco}</p>
+                            <p><strong>CEP:</strong> {selectedAluno.cep}</p>
+                            <p><strong>Responsável Financeiro: </strong> {selectedAluno.responsavel_financeiro}</p>
+                            <p><strong>Sexo:</strong> {selectedAluno.sexo}</p>
+                            <p><strong>Data de Criação:</strong> {selectedAluno.data_criacao}</p>
+                            <button onClick={closeAlunoModal} style={{
+                                marginTop: '1rem',
+                                padding: '0.5rem 1rem',
+                                borderRadius: '4px',
+                                border: 'none',
+                                backgroundColor: '#333',
+                                color: 'white',
+                                cursor: 'pointer'
+                            }}>Fechar</button>
+                        </InfoModal>
+                    </Modal>
+                )}
+            </Container>
         </>
     );
 }
