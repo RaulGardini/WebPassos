@@ -31,7 +31,7 @@ function Header() {
           {dropdownOpen && (
             <DropdownMenu>
               <DropdownItem onClick={() => navigate("/listAlunos")}><CiUser style={{fontSize: "1.5rem"}}/>Alunos</DropdownItem>
-              <DropdownItem>Botão 2</DropdownItem>
+              <DropdownItem onClick={() => navigate("/listColaboradores")}><CiUser style={{fontSize: "1.5rem"}}/>Colaboradores</DropdownItem>
               <DropdownItem>Botão 3</DropdownItem>
             </DropdownMenu>
           )}
