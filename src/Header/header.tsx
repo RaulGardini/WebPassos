@@ -2,6 +2,7 @@ import { useState } from "react";
 import { IoIosMenu } from "react-icons/io";
 import { IoIosArrowBack } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
+import { IoSchoolOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import {
   HeaderContainer,
@@ -30,9 +31,9 @@ function Header() {
           <IoIosMenu />
           {dropdownOpen && (
             <DropdownMenu>
-              <DropdownItem onClick={() => navigate("/listAlunos")}><CiUser style={{fontSize: "1.5rem"}}/>Alunos</DropdownItem>
-              <DropdownItem onClick={() => navigate("/listColaboradores")}><CiUser style={{fontSize: "1.5rem"}}/>Colaboradores</DropdownItem>
-              <DropdownItem>Botão 3</DropdownItem>
+              <DropdownItem onClick={() => navigate("/listAlunos")}><CiUser style={{fontSize: "1.5rem"}}/> Alunos</DropdownItem>
+              <DropdownItem onClick={() => navigate("/listColaboradores")}><CiUser style={{fontSize: "1.5rem"}}/> Colaboradores</DropdownItem>
+              <DropdownItem onClick={() => navigate("/listEscolas")}><IoSchoolOutline style={{fontSize: "1.5rem"}}/> Escolas</DropdownItem>
             </DropdownMenu>
           )}
         </Menu>

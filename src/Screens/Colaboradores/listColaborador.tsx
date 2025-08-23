@@ -357,7 +357,7 @@ function ListColaboradores() {
                             <p><strong>Sexo:</strong> {formatSexo(selectedColaborador.sexo)}</p>
                             <p><strong>Data de Nascimento:</strong> {new Date(selectedColaborador.data_nascimento).toLocaleDateString('pt-BR')}</p>
                             <p><strong>Idade:</strong> {calcularIdade(selectedColaborador.data_nascimento)}</p>
-                            <p><strong>Cargo ID:</strong> {selectedColaborador.cargo_id}</p>
+                            <p><strong>Cargo: </strong>{cargos.find(cargo => cargo.cargo_id === selectedColaborador.cargo_id)?.nome_cargo}</p>
                             <p><strong>Data de Criação:</strong> {formatDataCriacao(selectedColaborador.data_criacao)}</p>
                             <button onClick={closeColaboradorModal} style={{
                                 marginTop: '1rem',
