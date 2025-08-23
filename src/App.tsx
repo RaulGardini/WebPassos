@@ -9,6 +9,8 @@ import UpdateAluno from "./Screens/Alunos/updateAluno";
 import ListColaborador from "./Screens/Colaboradores/listColaborador";
 import AddColaborador from "./Screens/Colaboradores/addColaborador";
 import UpdateColaborador from "./Screens/Colaboradores/updateColaborador";
+//Escola
+import ListEscola from "./Screens/Escola/listEscola";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/listColaboradores" element={<ListColaborador />} />
         <Route path="/addColaboradores" element={<AddColaborador />} />
         <Route path="/updateColaborador/:id" element={<UpdateColaborador />} />
+        {/* Escola */}
+        <Route path="/listEscolas" element={<ListEscola />} />
       </Routes>
     </BrowserRouter>
   );
