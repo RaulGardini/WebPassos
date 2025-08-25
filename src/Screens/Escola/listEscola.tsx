@@ -52,6 +52,7 @@ function UpdateColaborador() {
     const [isCreateSalaOpen, setIsCreateSalaOpen] = useState(false);
     const [isEditSalaOpen, setIsEditSalaOpen] = useState(false);
     const [nomeSala, setNomeSala] = useState("");
+    const [capacidadeSala, setCapacidadeSala] = useState<number>(0);
     const [salaEditando, setSalaEditando] = useState<Sala | null>(null);
 
     // Estados para Modalidades
@@ -128,29 +129,33 @@ function UpdateColaborador() {
 
     const handleOpenCreateSala = () => {
         setNomeSala("");
+        setCapacidadeSala(0);
         setIsCreateSalaOpen(true);
     };
 
     const handleEditSala = (sala: Sala) => {
         setSalaEditando(sala);
         setNomeSala(sala.nome_sala);
+        setCapacidadeSala(sala.capacidade);
         setIsEditSalaOpen(true);
     };
 
     const handleSaveSala = async () => {
-        if (!nomeSala.trim()) return;
-        await createSala({ nome_sala: nomeSala });
+        if (!nomeSala.trim() || capacidadeSala <= 0) return;
+        await createSala({ nome_sala: nomeSala, capacidade: capacidadeSala });
         await carregarSalas();
         setNomeSala("");
+        setCapacidadeSala(0);
         setIsCreateSalaOpen(false);
     };
 
     const handleUpdateSala = async () => {
         if (!salaEditando) return;
-        await updateSala(salaEditando.sala_id, { nome_sala: nomeSala });
+        await updateSala(salaEditando.sala_id, { nome_sala: nomeSala, capacidade: capacidadeSala });
         await carregarSalas();
         setSalaEditando(null);
         setNomeSala("");
+        setCapacidadeSala(0);
         setIsEditSalaOpen(false);
     };
 
@@ -236,6 +241,12 @@ function UpdateColaborador() {
                                         value={nomeSala}
                                         onChange={(e) => setNomeSala(e.target.value)}
                                     />
+                                    <Input
+                                        type="number"
+                                        placeholder="Capacidade"
+                                        value={capacidadeSala}
+                                        onChange={(e) => setCapacidadeSala(Number(e.target.value))}
+                                    />
                                     <ButtonsModal>
                                         <ButtonSalvar onClick={handleSaveSala}>Salvar</ButtonSalvar>
                                         <ButtonCancelar onClick={() => setIsCreateSalaOpen(false)}>Cancelar</ButtonCancelar>
@@ -263,7 +274,7 @@ function UpdateColaborador() {
                         <SalaModalCaargoItemContainer>
                             {salas.map(s => (
                                 <SalaItem key={s.sala_id}>
-                                    <h4>{s.nome_sala}</h4>
+                                    <h4>{s.nome_sala} - <small>Capacidade: {s.capacidade}</small></h4>
                                     <DisplayFlex style={{ gap: '1rem', fontSize: '1.5rem', cursor: 'pointer' }}>
                                         <ActionButton onClick={() => handleEditSala(s)}><MdEditSquare /></ActionButton>
                                         <ActionButton onClick={() => handleDeleteSala(s.sala_id)}><MdDelete /></ActionButton>
@@ -281,6 +292,12 @@ function UpdateColaborador() {
                                         type="text"
                                         value={nomeSala}
                                         onChange={(e) => setNomeSala(e.target.value)}
+                                    />
+                                    <Input
+                                        type="number"
+                                        placeholder="Capacidade"
+                                        value={capacidadeSala}
+                                        onChange={(e) => setCapacidadeSala(Number(e.target.value))}
                                     />
                                     <ButtonsModal>
                                         <ButtonSalvar onClick={handleUpdateSala}>Salvar</ButtonSalvar>
@@ -403,41 +420,41 @@ function UpdateColaborador() {
                                 const data = await getCargos();
                                 setCargos(data);
                             }}><VscChromeClose /></LimparFilter>
-                    </FilterContainer>
+                        </FilterContainer>
 
-                    {/* Lista de cargos */}
-                    <SalaModalCaargoItemContainer>
-                        {cargos.map(c => (
-                            <CargoItem key={c.cargo_id}>
-                                <h4>{c.nome_cargo}</h4>
-                                <DisplayFlex style={{ gap: '1rem', fontSize: '1.5rem', cursor: 'pointer' }}>
-                                    <ActionButton onClick={() => handleEditCargo(c)}><MdEditSquare /></ActionButton>
-                                    <ActionButton onClick={() => handleDeleteCargo(c.cargo_id)}><MdDelete /></ActionButton>
-                                </DisplayFlex>
-                            </CargoItem>
-                        ))}
-                    </SalaModalCaargoItemContainer>
+                        {/* Lista de cargos */}
+                        <SalaModalCaargoItemContainer>
+                            {cargos.map(c => (
+                                <CargoItem key={c.cargo_id}>
+                                    <h4>{c.nome_cargo}</h4>
+                                    <DisplayFlex style={{ gap: '1rem', fontSize: '1.5rem', cursor: 'pointer' }}>
+                                        <ActionButton onClick={() => handleEditCargo(c)}><MdEditSquare /></ActionButton>
+                                        <ActionButton onClick={() => handleDeleteCargo(c.cargo_id)}><MdDelete /></ActionButton>
+                                    </DisplayFlex>
+                                </CargoItem>
+                            ))}
+                        </SalaModalCaargoItemContainer>
 
-                    {/* Modal de Edição Cargo */}
-                    {isEditCargoOpen && (
-                        <Overlay>
-                            <ModalContainer>
-                                <h1>Editar Cargo</h1>
-                                <Input
-                                    type="text"
-                                    value={nomeCargo}
-                                    onChange={(e) => setNomeCargo(e.target.value)}
-                                />
-                                <ButtonsModal>
-                                    <ButtonSalvar onClick={handleUpdateCargo}>Salvar</ButtonSalvar>
-                                    <ButtonCancelar onClick={() => setIsEditCargoOpen(false)}>Cancelar</ButtonCancelar>
-                                </ButtonsModal>
-                            </ModalContainer>
-                        </Overlay>
-                    )}
-                </ContainerCargo>
-            </DisplayFlex>
-        </Container >
+                        {/* Modal de Edição Cargo */}
+                        {isEditCargoOpen && (
+                            <Overlay>
+                                <ModalContainer>
+                                    <h1>Editar Cargo</h1>
+                                    <Input
+                                        type="text"
+                                        value={nomeCargo}
+                                        onChange={(e) => setNomeCargo(e.target.value)}
+                                    />
+                                    <ButtonsModal>
+                                        <ButtonSalvar onClick={handleUpdateCargo}>Salvar</ButtonSalvar>
+                                        <ButtonCancelar onClick={() => setIsEditCargoOpen(false)}>Cancelar</ButtonCancelar>
+                                    </ButtonsModal>
+                                </ModalContainer>
+                            </Overlay>
+                        )}
+                    </ContainerCargo>
+                </DisplayFlex>
+            </Container >
         </>
     );
 }
