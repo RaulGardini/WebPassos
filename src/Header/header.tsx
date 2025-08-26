@@ -34,6 +34,7 @@ function Header() {
               <DropdownItem onClick={() => navigate("/listAlunos")}><CiUser style={{fontSize: "1.5rem"}}/> Alunos</DropdownItem>
               <DropdownItem onClick={() => navigate("/listColaboradores")}><CiUser style={{fontSize: "1.5rem"}}/> Colaboradores</DropdownItem>
               <DropdownItem onClick={() => navigate("/listEscolas")}><IoSchoolOutline style={{fontSize: "1.5rem"}}/> Escolas</DropdownItem>
+              <DropdownItem onClick={() => navigate("/listHorarios")}><IoSchoolOutline style={{fontSize: "1.5rem"}}/> Horários</DropdownItem>
             </DropdownMenu>
           )}
         </Menu>

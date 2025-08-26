@@ -11,6 +11,8 @@ import AddColaborador from "./Screens/Colaboradores/addColaborador";
 import UpdateColaborador from "./Screens/Colaboradores/updateColaborador";
 //Escola
 import ListEscola from "./Screens/Escola/listEscola";
+// Horarios
+import ListHorarios from "./Screens/Horarios/listHorarios";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
         <Route path="/updateColaborador/:id" element={<UpdateColaborador />} />
         {/* Escola */}
         <Route path="/listEscolas" element={<ListEscola />} />
+        {/* Horarios */}
+        <Route path="/listHorarios" element={<ListHorarios />} />
       </Routes>
     </BrowserRouter>
   );
