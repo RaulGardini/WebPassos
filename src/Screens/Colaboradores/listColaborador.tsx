@@ -7,7 +7,7 @@ import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaVenusMars } from "react-icons/fa";
 import { getCargos } from "../../services/cargoService";
-import { colaboradorService } from "../../services/colaboradorService";
+import { getColaboradores, deleteColaborador } from "../../services/colaboradorService";
 import type { Cargo } from '../../Models/cargo';
 import {
     Container,
@@ -74,7 +74,7 @@ function ListColaboradores() {
     const fetchColaboradores = async (searchFilters?: ColaboradorFilters) => {
         try {
             setLoading(true);
-            const data = await colaboradorService.getColaboradores(searchFilters);
+            const data = await getColaboradores(searchFilters);
             setColaboradores(data);
             setError(null);
         } catch (err) {
@@ -144,7 +144,7 @@ function ListColaboradores() {
         if (!window.confirm("Tem certeza que deseja deletar este colaborador?")) return;
 
         try {
-            await colaboradorService.deleteColaborador(colaborador_id);
+            await deleteColaborador(colaborador_id);
             alert("Colaborador deletado com sucesso!");
             setColaboradores((prev) => prev.filter((colaborador) => colaborador.colaborador_id !== colaborador_id));
         } catch (error) {

@@ -32,3 +32,9 @@ export const deleteHorario = async (id: number): Promise<{ message: string }> =>
   const response = await axios.delete(`${API_URL}/${id}`);
   return response.data;
 };
+
+// NOVA FUNÇÃO: Buscar horários disponíveis para uma turma
+export const getHorariosDisponiveisParaTurma = async (turmaId: number) => {
+  const response = await axios.get(`${API_URL}/disponiveis-para-turma/${turmaId}`);
+  return response.data;
+};
