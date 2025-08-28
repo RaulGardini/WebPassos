@@ -19,14 +19,12 @@ import {
     Button,
     Message,
     TopLine,
-    MidLine,
     BackButton,
-    Label
 } from "./style";
 
 function AddTurmas() {
     const navigate = useNavigate();
-    
+
     const [formData, setFormData] = useState<CreateTurmaData>({
         nome: "",
         sala_id: 0,
@@ -53,7 +51,7 @@ function AddTurmas() {
                     getModalidades(),
                     getColaboradores()
                 ]);
-                
+
                 setSalas(salasData);
                 setModalidades(modalidadesData);
                 setProfessores(professoresData);
@@ -69,15 +67,15 @@ function AddTurmas() {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        
+
         setFormData(prev => ({
             ...prev,
-            [name]: name === 'sala_id' || name === 'modalidade_id' || name === 'professor1_id' || 
-                   name === 'professor2_id' || name === 'professor3_id' 
+            [name]: name === 'sala_id' || name === 'modalidade_id' || name === 'professor1_id' ||
+                name === 'professor2_id' || name === 'professor3_id'
                 ? (value ? Number(value) : undefined)
                 : name === 'mensalidade'
-                ? Number(value)
-                : value 
+                    ? Number(value)
+                    : value
         }));
 
         if (message) {
@@ -87,7 +85,7 @@ function AddTurmas() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!formData.nome.trim()) {
             setMessage("Nome da turma é obrigatório");
             setMessageType("error");
@@ -137,17 +135,17 @@ function AddTurmas() {
             });
 
             const novaTurma = await createTurma(dataToSend);
-            
+
             // Buscar ID em possíveis campos
             const turmaId = novaTurma.turma_id
-            
+
             if (!turmaId) {
                 throw new Error("ID da turma não encontrado na resposta da API");
             }
-            
+
             setMessage("Turma criada com sucesso!");
             setMessageType("success");
-            
+
             // Navegar para a tela de horários
             setTimeout(() => {
                 navigate(`/addhorarios/${turmaId}`);
@@ -162,10 +160,10 @@ function AddTurmas() {
     };
 
     const handleBack = () => {
-        const hasData = Object.values(formData).some(value => 
+        const hasData = Object.values(formData).some(value =>
             value !== "" && value !== 0 && value !== undefined && value !== "ativa"
         );
-        
+
         if (hasData) {
             if (window.confirm("Deseja realmente voltar? Os dados não salvos serão perdidos.")) {
                 navigate(-1);
@@ -181,103 +179,123 @@ function AddTurmas() {
             <Container>
                 <DisplayFlex>
                     <Title>Nova Turma</Title>
-                    <TopLine style={{width: '83%'}}></TopLine>
+                    <TopLine style={{ width: '83%' }}></TopLine>
                 </DisplayFlex>
-                
+
                 <Form onSubmit={handleSubmit}>
-                    <Input
-                        type="text"
-                        name="nome"
-                        placeholder="Nome da turma"
-                        value={formData.nome}
-                        onChange={handleInputChange}
-                        required
-                    />
-                    <Select
-                        name="sala_id"
-                        value={formData.sala_id || ""}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="">Selecione uma sala</option>
-                        {salas.map((sala) => (
-                            <option key={sala.sala_id} value={sala.sala_id.toString()}>
-                                {sala.nome_sala} - Capacidade: {sala.capacidade}
-                            </option>
-                        ))}
-                    </Select>
-
-                    <Select
-                        name="modalidade_id"
-                        value={formData.modalidade_id || ""}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="">Selecione uma modalidade</option>
-                        {modalidades.map((modalidade) => (
-                            <option key={modalidade.modalidade_id} value={modalidade.modalidade_id.toString()}>
-                                {modalidade.nome_modalidade}
-                            </option>
-                        ))}
-                    </Select>
-
-                    <Select
-                        name="professor1_id"
-                        value={formData.professor1_id || ""}
-                        onChange={handleInputChange}
-                    >
-                        <option value="">Selecione o 1º professor (opcional)</option>
-                        {professores.map((professor) => (
-                            <option key={professor.colaborador_id} value={professor.colaborador_id.toString()}>
-                                {professor.nome}
-                            </option>
-                        ))}
-                    </Select>
-
-                    <Select
-                        name="professor2_id"
-                        value={formData.professor2_id || ""}
-                        onChange={handleInputChange}
-                    >
-                        <option value="">Selecione o 2º professor (opcional)</option>
-                        {professores.map((professor) => (
-                            <option key={professor.colaborador_id} value={professor.colaborador_id.toString()}>
-                                {professor.nome}
-                            </option>
-                        ))}
-                    </Select>
-
-                    <Select
-                        name="status"
-                        value={formData.status}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="ativa">Ativa</option>
-                        <option value="inativa">Inativa</option>
-                    </Select>
-
-                    <Input
-                        type="number"
-                        name="mensalidade"
-                        placeholder="Mensalidade (R$)"
-                        value={formData.mensalidade || ""}
-                        onChange={handleInputChange}
-                        min="0"
-                        step="0.01"
-                        required
-                    />
-
-                    <Input
-                        type="number"
-                        name="capacidade"
-                        placeholder="Capacidade"
-                        value={formData.capacidade || ""}
-                        onChange={handleInputChange}
-                        required
-                    />
-
-                    <MidLine></MidLine>
+                    <DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Nome da turma:</p>
+                            <Input
+                                type="text"
+                                name="nome"
+                                placeholder="Nome da turma"
+                                value={formData.nome}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Sala:</p>
+                            <Select
+                                name="sala_id"
+                                value={formData.sala_id || ""}
+                                onChange={handleInputChange}
+                                required
+                            >
+                                <option value="">Selecione uma sala</option>
+                                {salas.map((sala) => (
+                                    <option key={sala.sala_id} value={sala.sala_id.toString()}>
+                                        {sala.nome_sala} - Capacidade: {sala.capacidade}
+                                    </option>
+                                ))}
+                            </Select>
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Modalidade:</p>
+                            <Select
+                                name="modalidade_id"
+                                value={formData.modalidade_id || ""}
+                                onChange={handleInputChange}
+                                required
+                            >
+                                <option value="">Selecione uma modalidade</option>
+                                {modalidades.map((modalidade) => (
+                                    <option key={modalidade.modalidade_id} value={modalidade.modalidade_id.toString()}>
+                                        {modalidade.nome_modalidade}
+                                    </option>
+                                ))}
+                            </Select>
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Professor 1:</p>
+                            <Select
+                                name="professor1_id"
+                                value={formData.professor1_id || ""}
+                                onChange={handleInputChange}
+                            >
+                                <option value="">Selecione o 1º professor (opcional)</option>
+                                {professores.map((professor) => (
+                                    <option key={professor.colaborador_id} value={professor.colaborador_id.toString()}>
+                                        {professor.nome}
+                                    </option>
+                                ))}
+                            </Select>
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Professor 2:</p>
+                            <Select
+                                name="professor2_id"
+                                value={formData.professor2_id || ""}
+                                onChange={handleInputChange}
+                            >
+                                <option value="">Selecione o 2º professor (opcional)</option>
+                                {professores.map((professor) => (
+                                    <option key={professor.colaborador_id} value={professor.colaborador_id.toString()}>
+                                        {professor.nome}
+                                    </option>
+                                ))}
+                            </Select>
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Status:</p>
+                            <Select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleInputChange}
+                                required
+                            >
+                                <option value="ativa">Ativa</option>
+                                <option value="inativa">Inativa</option>
+                            </Select>
+                        </DisplayFlex>
+                    </DisplayFlex>
+                    <DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Mensalidade:</p>
+                            <Input
+                                type="number"
+                                name="mensalidade"
+                                placeholder="Mensalidade (R$)"
+                                value={formData.mensalidade || ""}
+                                onChange={handleInputChange}
+                                min="0"
+                                step="0.01"
+                                required
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Capacidade:</p>
+                            <Input
+                                type="number"
+                                name="capacidade"
+                                placeholder="Capacidade"
+                                value={formData.capacidade || ""}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </DisplayFlex>
+                    </DisplayFlex>
 
                     <DisplayFlex>
                         <BackButton type="button" onClick={handleBack} disabled={loading}>
@@ -288,7 +306,7 @@ function AddTurmas() {
                         </Button>
                     </DisplayFlex>
                 </Form>
-                
+
                 {message && (
                     <Message success={messageType === "success"}>
                         {message}

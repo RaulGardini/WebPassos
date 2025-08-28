@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   margin-right: 2rem;
   margin-left: 2rem;
-//   background-color: #d6d6d6ff;
+  font-family: Arial, sans-serif;
 `;
 
 export const DisplayFlex = styled.div`
@@ -249,8 +249,7 @@ export const Input = styled.input`
   
   &:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: #ff0000ff;
   }
   
   &.error {
@@ -262,6 +261,7 @@ export const Select = styled.select`
   width: 15rem;
   margin: 1rem;
   padding: 12px;
+  color: #6e6e6eff;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
@@ -269,8 +269,7 @@ export const Select = styled.select`
   
   &:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: #ff0000ff;
   }
   
   &.error {
@@ -384,4 +383,62 @@ export const InfoModal = styled.div`
   max-width: 500px;
   width: 90%;
   font-family: Arial, sans-serif;
+`;
+
+export const DaysContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+    width: 100%;
+`;
+
+export const DayCard = styled.div<{ isSelected: boolean }>`
+    background: ${props => props.isSelected ? '#007bff' : '#f8f9fa'};
+    color: ${props => props.isSelected ? 'white' : '#333'};
+    border: 2px solid ${props => props.isSelected ? '#007bff' : '#dee2e6'};
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+
+    &:hover {
+        border-color: #007bff;
+        background: ${props => props.isSelected ? '#0056b3' : '#e7f1ff'};
+    }
+`;
+
+export const HorariosContainer = styled.div`
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    background: #fff;
+`;
+
+export const HorariosList = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+`;
+
+export const HorarioItem = styled.div<{ isSelected: boolean }>`
+    background: ${props => props.isSelected ? '#28a745' : '#f8f9fa'};
+    color: ${props => props.isSelected ? 'white' : '#333'};
+    border: 2px solid ${props => props.isSelected ? '#28a745' : '#dee2e6'};
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+
+    &:hover {
+        border-color: #28a745;
+        background: ${props => props.isSelected ? '#218838' : '#e8f5e9'};
+    }
 `;

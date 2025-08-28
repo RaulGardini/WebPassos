@@ -27,9 +27,9 @@ const DaysContainer = styled.div`
 `;
 
 const DayCard = styled.div<{ isSelected: boolean }>`
-    background: ${props => props.isSelected ? '#007bff' : '#f8f9fa'};
+    background: ${props => props.isSelected ? '#ee0e0eff' : '#f8f9fa'};
     color: ${props => props.isSelected ? 'white' : '#333'};
-    border: 2px solid ${props => props.isSelected ? '#007bff' : '#dee2e6'};
+    border: 2px solid ${props => props.isSelected ? '#333' : '#dee2e6'};
     border-radius: 8px;
     padding: 15px;
     text-align: center;
@@ -38,8 +38,8 @@ const DayCard = styled.div<{ isSelected: boolean }>`
     user-select: none;
 
     &:hover {
-        border-color: #007bff;
-        background: ${props => props.isSelected ? '#0056b3' : '#e7f1ff'};
+        border-color: #1a0505ff;
+        background: ${props => props.isSelected ? '#424242ff' : '#cececeff'};
     }
 `;
 
@@ -83,8 +83,8 @@ const HorarioItem = styled.div<{ isSelected: boolean }>`
     user-select: none;
 
     &:hover {
-        border-color: #28a745;
-        background: ${props => props.isSelected ? '#218838' : '#e8f5e9'};
+        border-color: #1a0505ff;
+        background: ${props => props.isSelected ? '#424242ff' : '#cececeff'};
     }
 `;
 
@@ -227,7 +227,7 @@ function AddTurmasHorarios() {
             setMessage(result.message || "Horários salvos com sucesso! Redirecionando...");
             
             setTimeout(() => {
-                navigate(`/addturmasalunos/${turmaId}`);
+                navigate(`/listTurmas`);
             }, 1500);
 
         } catch (error: any) {
@@ -255,8 +255,8 @@ function AddTurmasHorarios() {
             <Header />
             <Container>
                 <DisplayFlex>
-                    <Title>Horários da Turma (ID: {turmaId})</Title>
-                    <TopLine style={{width: '83%'}}></TopLine>
+                    <Title>Horários da Turma</Title>
+                    <TopLine style={{width: '74%'}}></TopLine>
                 </DisplayFlex>
                 
                 {loading && !horarios.length ? (

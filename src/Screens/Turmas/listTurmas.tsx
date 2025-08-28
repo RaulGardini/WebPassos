@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "../../Header/header";
 import type { Turma, TurmaFilters } from "../../Models/turma";
 import { IoAdd } from "react-icons/io5";
-import { FiSearch, FiX, FiUser, FiUsers, FiClock, FiHome } from "react-icons/fi";
+import { FiSearch, FiX, FiUser, FiUsers, FiHome } from "react-icons/fi";
 import { MdPeopleAlt } from "react-icons/md";
 import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
