@@ -3,8 +3,7 @@ import Header from "../../Header/header";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTurmaById } from "../../services/turmaService";
 import { getHorariosDisponiveisParaTurma } from "../../services/horarioService";
-import { 
-    getHorariosByTurmaId, 
+import {  
     addMultipleHorariosToTurma
 } from "../../services/turmaHorarioService";
 import type { Horario } from '../../Models/horario';
@@ -17,69 +16,13 @@ import {
     Message,
     TopLine,
     MidLine,
-    BackButton
+    BackButton,
+    DaysContainer,
+    DayCard,
+    HorariosContainer,
+    HorariosList,
+    HorarioItem
 } from "./style";
-
-// Styled components específicos
-import styled from "styled-components";
-
-const DaysContainer = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 15px;
-    margin: 20px 0;
-    width: 100%;
-`;
-
-const DayCard = styled.div<{ isSelected: boolean }>`
-    background: ${props => props.isSelected ? '#007bff' : '#f8f9fa'};
-    color: ${props => props.isSelected ? 'white' : '#333'};
-    border: 2px solid ${props => props.isSelected ? '#007bff' : '#dee2e6'};
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    user-select: none;
-
-    &:hover {
-        border-color: #007bff;
-        background: ${props => props.isSelected ? '#0056b3' : '#e7f1ff'};
-    }
-`;
-
-const HorariosContainer = styled.div`
-    margin-top: 20px;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 15px;
-    background: #fff;
-`;
-
-const HorariosList = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-`;
-
-const HorarioItem = styled.div<{ isSelected: boolean }>`
-    background: ${props => props.isSelected ? '#28a745' : '#f8f9fa'};
-    color: ${props => props.isSelected ? 'white' : '#333'};
-    border: 2px solid ${props => props.isSelected ? '#28a745' : '#dee2e6'};
-    border-radius: 6px;
-    padding: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    user-select: none;
-
-    &:hover {
-        border-color: #28a745;
-        background: ${props => props.isSelected ? '#218838' : '#e8f5e9'};
-    }
-`;
 
 function UpdateTurmasHorarios() {
     const navigate = useNavigate();

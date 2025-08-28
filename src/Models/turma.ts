@@ -49,4 +49,5 @@ export interface UpdateTurmaData {
   professor3_id?: number;
   status?: "ativa" | "inativa";
   mensalidade?: number;
+  capacidade?: number;
 }

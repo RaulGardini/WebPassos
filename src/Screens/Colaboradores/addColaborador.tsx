@@ -308,9 +308,6 @@ function AddColaborador() {
                         required
                     />
                     <DisplayFlex>
-                        <Button type="submit" disabled={loading}>
-                            {loading ? "Salvando..." : "Salvar"}
-                        </Button>
                         <BackButton 
                             type="button" 
                             onClick={handleCancel}
@@ -318,6 +315,9 @@ function AddColaborador() {
                         >
                             Cancelar
                         </BackButton>
+                        <Button type="submit" disabled={loading}>
+                            {loading ? "Salvando..." : "Salvar"}
+                        </Button>
                     </DisplayFlex>
                 </Form>
                 {message && <Message success={success}>{message}</Message>}
