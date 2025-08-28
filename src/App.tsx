@@ -1,3 +1,4 @@
+// App.js - Correção da rota
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Formulario from "./Formulario/formulario";
 import Home from "./Screens/Home/home";
@@ -13,6 +14,12 @@ import UpdateColaborador from "./Screens/Colaboradores/updateColaborador";
 import ListEscola from "./Screens/Escola/listEscola";
 // Horarios
 import ListHorarios from "./Screens/Horarios/listHorarios";
+// Turmas
+import ListTurmas from "./Screens/Turmas/listTurmas";
+import AddTurmas from "./Screens/Turmas/addTurmas";
+import AddTurmasHorarios from "./Screens/Turmas/addTurmasHorarios";
+import UpdateTurmas from "./Screens/Turmas/updateTurmas";
+import UpdateTurmasHorarios from "./Screens/Turmas//updateTurmasHorarios";
 
 function App() {
   return (
@@ -32,6 +39,12 @@ function App() {
         <Route path="/listEscolas" element={<ListEscola />} />
         {/* Horarios */}
         <Route path="/listHorarios" element={<ListHorarios />} />
+        {/* Turmas */}
+        <Route path="/listTurmas" element={<ListTurmas />} />
+        <Route path="/addTurmas" element={<AddTurmas />} />
+        <Route path="/addhorarios/:turmaId" element={<AddTurmasHorarios />} />
+        <Route path="/updateTurmas/:turmaId" element={<UpdateTurmas />} />
+        <Route path="/updateturmashorarios/:turmaId" element={<UpdateTurmasHorarios />} />
       </Routes>
     </BrowserRouter>
   );

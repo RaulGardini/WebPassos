@@ -26,7 +26,7 @@ export const TopLine = styled.div`
 
 export const DiaContainer = styled.div`
   width: 13%;
-  height: 90vh;
+  margin-top: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +42,7 @@ export const DiaTitle = styled.h1`
 
 export const VerticalLine = styled.div`
    border-left: 1px solid red;
-   height: 60vh;
+   height: 80vh;
 `;
 
 export const HorarioBox = styled.div`
