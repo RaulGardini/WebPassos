@@ -14,6 +14,9 @@ import { getColaboradores } from "../../services/colaboradorService";
 import type { Sala } from '../../Models/sala';
 import type { Modalidade } from '../../Models/modalidade';
 import type { Colaborador } from '../../Models/colaborador';
+import type { TurmaInfo } from "../../Models/matricula";
+import { getTurmaInfo } from "../../services/matriculaService";
+
 import {
     Container,
     Title,
@@ -50,8 +53,7 @@ function ListTurmas() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-    
-    // Estados para os dados auxiliares
+    const [turmaInfo, setTurmaInfo] = useState<TurmaInfo | null>(null);
     const [salas, setSalas] = useState<Sala[]>([]);
     const [modalidades, setModalidades] = useState<Modalidade[]>([]);
     const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);
@@ -87,9 +89,11 @@ function ListTurmas() {
         loadAuxiliaryData();
     }, []);
 
-    const openTurmaModal = (turma: Turma) => {
+    const openTurmaModal = async (turma: Turma) => {
         setSelectedTurma(turma);
         setIsModalOpen(true);
+        const info = await getTurmaInfo(turma.turma_id);
+        setTurmaInfo(info);
     };
 
     const closeTurmaModal = () => {
@@ -371,7 +375,7 @@ function ListTurmas() {
                                         <TableCell textAlign="center">
                                             <ActionButtons>
                                                 <EditButton
-                                                    // onClick={() => navigate(`/updateTurma/${turma.turma_id}`)}
+                                                    onClick={() => navigate(`/turmas/${turma.turma_id}/matriculas`)}
                                                 >
                                                     <MdPeopleAlt />
                                                 </EditButton>
@@ -400,7 +404,7 @@ function ListTurmas() {
                 </TableContainer>
 
                 {/* Modal de Detalhes */}
-                {isModalOpen && selectedTurma && (
+                {isModalOpen && selectedTurma &&  (
                     <Modal>
                         <InfoModal>
                             <h2>Detalhes da Turma</h2>
@@ -408,11 +412,13 @@ function ListTurmas() {
                             <p><strong>Nome:</strong> {selectedTurma.nome}</p>
                             <p><strong>Sala:</strong> {getNomeSala(selectedTurma.sala_id)}</p>
                             <p><strong>Modalidade:</strong> {getNomeModalidade(selectedTurma.modalidade_id)}</p>
-                            <p><strong>Colaborador 1:</strong> {getNomeColaborador(selectedTurma.professor1_id)}</p>
-                            <p><strong>Colaborador 2:</strong> {selectedTurma.professor2_id ? getNomeColaborador(selectedTurma.professor2_id) : 'Não informado'}</p>
+                            <p><strong>Professor 1:</strong> {getNomeColaborador(selectedTurma.professor1_id)}</p>
+                            <p><strong>Professor 2:</strong> {selectedTurma.professor2_id ? getNomeColaborador(selectedTurma.professor2_id) : 'Não informado'}</p>
                             <p><strong>Status:</strong> {formatStatus(selectedTurma.status)}</p>
                             <p><strong>Mensalidade:</strong> {formatMensalidade(selectedTurma.mensalidade)}</p>
                             <p><strong>Capacidade:</strong> {selectedTurma.capacidade}</p>
+                            <p><strong>Vagas disponíveis:</strong> {turmaInfo?.vagas_disponiveis}</p>
+                            <p><strong>Alunas:</strong> {turmaInfo?.matriculas_ativas}</p>
                             <p><strong>Data de Criação:</strong> {formatDataCriacao(selectedTurma.data_criacao)}</p>
                             
                             <div style={{ marginTop: '1rem' }}>

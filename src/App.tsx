@@ -20,6 +20,7 @@ import AddTurmas from "./Screens/Turmas/addTurmas";
 import AddTurmasHorarios from "./Screens/Turmas/addTurmasHorarios";
 import UpdateTurmas from "./Screens/Turmas/updateTurmas";
 import UpdateTurmasHorarios from "./Screens/Turmas//updateTurmasHorarios";
+import AddMatricula from "./Screens/Turmas/addMatricula";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/addhorarios/:turmaId" element={<AddTurmasHorarios />} />
         <Route path="/updateTurmas/:turmaId" element={<UpdateTurmas />} />
         <Route path="/updateturmashorarios/:turmaId" element={<UpdateTurmasHorarios />} />
+        <Route path="/turmas/:turmaId/matriculas" element={<AddMatricula />} />
       </Routes>
     </BrowserRouter>
   );

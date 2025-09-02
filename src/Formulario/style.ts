@@ -40,21 +40,35 @@ export const Form = styled.form`
 
 export const Title = styled.h1`
   font-size: 5rem;
-            font-weight: 900;
-            font-family: 'Arial', sans-serif;
-            letter-spacing: 0.1em;
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.36) 0%,
-                rgba(255, 255, 255, 0.30) 40%,
-                rgba(255, 255, 255, 0.30) 60%,
-                rgba(255, 255, 255, 0.30) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
-            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
-            position: relative;
+  font-weight: 900;
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 0.1em;
+
+  /* Efeito vidro translúcido */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(255, 255, 255, 0.10) 70%,
+    rgba(255, 255, 255, 0.20) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Contorno mais suave */
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+
+  /* Sombra quase invisível para dar profundidade */
+  text-shadow: 0 2px 6px rgba(255, 255, 255, 0.08);
+
+  position: relative;
 `;
+
+
+
+
+
 
 export const Button = styled.button`
   background-color: #ff0000ff;
