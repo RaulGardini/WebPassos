@@ -308,7 +308,6 @@ export const BackButton = styled.button`
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
-  margin-right: 10px;
   display: flex;
   align-items: center;
   margin: 1rem 1rem;
@@ -441,4 +440,144 @@ export const HorarioItem = styled.div<{ isSelected: boolean }>`
         border-color: #28a745;
         background: ${props => props.isSelected ? '#218838' : '#e8f5e9'};
     }
+`;
+
+export const TurmaInfoCard = styled.div`
+  margin-top: 1rem;
+  background: #ffffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+`;
+
+export const TurmaInfoGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+`;
+
+export const TurmaInfoItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  
+  strong {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+  }
+  
+  span {
+    font-size: 1rem;
+    color: #212529;
+  }
+`;
+
+export const ListsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+`;
+
+export const ListSection = styled.div`
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+export const ListHeader = styled.div`
+  background: #ffffffff;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  
+  h3 {
+    margin: 0;
+    color: #444444ff;
+    font-size: 1.125rem;
+  }
+`;
+
+export const ListBody = styled.div`
+  max-height: 600px;
+  overflow-y: auto;
+`;
+
+export const AlunoItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem;
+  border-bottom: 1px solid #f1f3f4;
+  
+  &:hover {
+    background: #f8f9fa;
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+     &:nth-child(odd) {
+    background-color: #f9f9f9; /* cor clara */
+  }
+
+  &:nth-child(even) {
+    background-color: #ffffff; /* cor branca */
+  }
+`;
+
+export const AlunoInfo = styled.div`
+  display: Flex;  
+  h4 {
+    margin: 0 0 0.25rem 0;
+    color: #505050ff;
+    font-size: 1rem;
+  }
+  
+  p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+`;
+
+export const ActionButton = styled.button<{ variant?: 'add' | 'remove' }>`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+  
+  ${props => props.variant === 'add' ? `
+    background: #28a745;
+    color: white;
+    
+    &:hover {
+      background: #218838;
+    }
+  ` : `
+    background: #dc3545;
+    color: white;
+    
+    &:hover {
+      background: #c82333;
+    }
+  `}
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+export const SearchContainer = styled.div`
+  padding: 1rem;
+  background: #ffffffff;
+  display: flex;
+  justify-content: center;
 `;
