@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../Header/header";
 import { FiSearch, FiX, FiUser, FiArrowLeft } from "react-icons/fi";
-import { IoAdd } from "react-icons/io5";
 import { MdPersonRemove } from "react-icons/md";
 import {
     getAlunosDisponiveis,

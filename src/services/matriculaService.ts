@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Aluno, AlunoFilters } from "../Models/aluno";
+import type { Aluno } from "../Models/aluno";
 import type { Matricula, TurmaInfo, MatriculaFilters } from "../Models/matricula";
 
 const API_URL = "http://localhost:3000";

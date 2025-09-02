@@ -14,7 +14,7 @@ import { getColaboradores } from "../../services/colaboradorService";
 import type { Sala } from '../../Models/sala';
 import type { Modalidade } from '../../Models/modalidade';
 import type { Colaborador } from '../../Models/colaborador';
-import type { Matricula, TurmaInfo, MatriculaFilters } from "../../Models/matricula";
+import type { TurmaInfo } from "../../Models/matricula";
 import { getTurmaInfo } from "../../services/matriculaService";
 
 import {
