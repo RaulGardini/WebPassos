@@ -3,7 +3,7 @@ import Header from "../../Header/header";
 import { FiClock, FiUser, FiUsers, FiHome, FiCalendar } from "react-icons/fi";
 import { MdPeopleAlt } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { getAulasHoje } from "../../services/homeService";
+import { getAulasHoje } from "../../services/turmasHojeService";
 import { getSalas } from "../../services/salaService";
 import { getModalidades } from "../../services/modalidadeService";
 import { getColaboradores } from "../../services/colaboradorService";
