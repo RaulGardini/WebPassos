@@ -10,12 +10,13 @@ export const HeaderContainer = styled.header`
 `;
 
 export const LeftMenu = styled.div`
-  width: 25%;
+  width: 30%;
   height: 10vh;
   display: flex;
   align-items: center;
   justify-content: space-around;
   color: white;
+  font-family: arial;
 `;
 
 export const RightMenu = styled.div`
@@ -53,6 +54,7 @@ export const Title = styled.h1`
             -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
             text-shadow: 0 1px 3px rgba(255, 255, 255, 0.1);
             position: relative;
+            cursor: pointer;
 `;
 
 export const Logout = styled.p`
@@ -111,4 +113,9 @@ export const DropdownItem = styled.button`
   &:not(:last-child) {
     border-bottom: 1px solid #f0f0f0;
   }
+`;
+
+export const SubButton = styled.h4`
+  margin-top: 1.7rem;
+  cursor: pointer;
 `;

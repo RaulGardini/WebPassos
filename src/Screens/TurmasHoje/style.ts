@@ -11,7 +11,7 @@ export const DisplayFlex = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 2rem;
+  font-size: 3rem;
   margin: 0;
   margin-bottom: 0.8rem;
   color: black;
@@ -162,16 +162,16 @@ export const ActionButton = styled.button`
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  border: 1px solid #007bff;
+  border: 1px solid #ff0000ff;
   background: transparent;
-  color: #007bff;
+  color: #ff0000ff;
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.875rem;
   transition: all 0.2s;
   
   &:hover {
-    background: #007bff;
+    background: #ff0000ff;
     color: white;
   }
 `;

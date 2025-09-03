@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoIosMenu } from "react-icons/io";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowDown  } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import { IoSchoolOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,8 @@ import {
   Logout,
   Menu,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  SubButton
 } from "./style";
 
 function Header() {
@@ -41,7 +42,8 @@ function Header() {
             </DropdownMenu>
           )}
         </Menu>
-        <Title>WebPassos</Title>
+        <Title onClick={() => navigate("/home")}>WebPassos</Title>
+        <SubButton onClick={() => navigate("/turmasHoje")}>Turmas hoje <IoIosArrowDown /></SubButton>
       </LeftMenu>
       <RightMenu>
         <Logout onClick={() => navigate("/")}>
