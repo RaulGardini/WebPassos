@@ -20,7 +20,7 @@ export const Title = styled.h1`
 
 export const TopLine = styled.div`
   border-top: 1px solid red;
-  width: 100%;
+  flex: 1;
   margin: 2rem 0 0 2rem;
 `;
 
