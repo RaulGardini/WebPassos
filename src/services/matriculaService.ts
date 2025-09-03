@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Aluno } from "../Models/aluno";
 import type { Matricula, TurmaInfo, MatriculaFilters } from "../Models/matricula";
 
-const API_URL = "http://localhost:3000";
+const API_URL = "http://localhost:3000/matricula";
 
 // GET alunos disponíveis para matrícula
 export const getAlunosDisponiveis = async (turma_id: number, filters?: MatriculaFilters): Promise<Aluno[]> => {
@@ -30,7 +30,7 @@ export const matricularAluno = async (turma_id: number, aluno_id: number) => {
 
 // DELETE matrícula
 export const deletarMatricula = async (matricula_id: number) => {
-  const response = await axios.delete(`${API_URL}/matriculas/${matricula_id}`);
+  const response = await axios.delete(`${API_URL}/${matricula_id}`);
   return response.data;
 };
 

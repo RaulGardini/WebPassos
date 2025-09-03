@@ -4,7 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getTurmaById } from "../../services/turmaService";
 import { getHorariosDisponiveisParaTurma } from "../../services/horarioService";
 import {  
-    addMultipleHorariosToTurma
+    addMultipleHorariosToTurma,
+    removeAllHorariosFromTurma
 } from "../../services/turmaHorarioService";
 import type { Horario } from '../../Models/horario';
 import type { Turma } from '../../Models/turma';
@@ -120,27 +121,6 @@ function UpdateTurmasHorarios() {
         }
     };
 
-    // Função para remover TODOS os horários da turma via API
-    const removeAllHorarios = async () => {
-        try {
-            const response = await fetch(`http://localhost:3000/turmas/${turmaId}/horarios`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro ao remover horários: ${response.status}`);
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Erro ao remover todos os horários:', error);
-            throw error;
-        }
-    };
-
     const handleSave = async () => {
         try {
             setLoading(true);
@@ -149,7 +129,7 @@ function UpdateTurmasHorarios() {
 
             // PRIMEIRO: Remover TODOS os horários atuais da turma
             console.log("Removendo todos os horários atuais...");
-            await removeAllHorarios();
+            await removeAllHorariosFromTurma(turmaId);
 
             // SEGUNDO: Adicionar os novos horários selecionados
             if (horariosSelecionados.length > 0) {
