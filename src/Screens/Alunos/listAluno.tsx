@@ -304,7 +304,7 @@ function ListAlunos() {
                                     <TableHeaderCell>CPF</TableHeaderCell>
                                     <TableHeaderCell>Telefone</TableHeaderCell>
                                     <TableHeaderCell>Cidade</TableHeaderCell>
-                                    <TableHeaderCell>Data Nasc.</TableHeaderCell>
+                                    <TableHeaderCell>Idade</TableHeaderCell>
                                     <TableHeaderCell className="center">Ações</TableHeaderCell>
                                 </tr>
                             </TableHeader>
