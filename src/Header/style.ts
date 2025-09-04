@@ -63,6 +63,7 @@ export const Logout = styled.p`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
   &:hover {
     color: #ca2222ff;

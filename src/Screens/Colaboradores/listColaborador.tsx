@@ -242,7 +242,7 @@ function ListColaboradores() {
                         <FilterGroup>
                             <FilterLabel>
                                 <FiUsers />
-                                Cargo ID
+                                Cargo
                             </FilterLabel>
                             <FilterInput
                                 as="select"
@@ -303,7 +303,7 @@ function ListColaboradores() {
                                     <TableHeaderCell>Telefone</TableHeaderCell>
                                     <TableHeaderCell>Sexo</TableHeaderCell>
                                     <TableHeaderCell>Idade</TableHeaderCell>
-                                    <TableHeaderCell>Cargo ID</TableHeaderCell>
+                                    <TableHeaderCell>Cargo</TableHeaderCell>
                                     <TableHeaderCell className="center">Ações</TableHeaderCell>
                                 </tr>
                             </TableHeader>
