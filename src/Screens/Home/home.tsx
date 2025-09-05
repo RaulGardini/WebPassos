@@ -259,12 +259,24 @@ function Home() {
             <CardHeader>
               <CardTitle>
                 <FiUsers />
-                Total de salas
+                Total de cargos
               </CardTitle>
             </CardHeader>
             <CardValue>{ocupacaoData?.detalhes.total_cargos || 0}</CardValue>
             <CardSubtitle>
               Total de cargos na academia
+            </CardSubtitle>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <FiUsers />
+                Total de fornecedores
+              </CardTitle>
+            </CardHeader>
+            <CardValue>{ocupacaoData?.detalhes.total_fornecedores || 0}</CardValue>
+            <CardSubtitle>
+              Total de fornecedores na academia
             </CardSubtitle>
           </Card>
         </DashboardGrid>

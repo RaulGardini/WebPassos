@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Header from "../../Header/header";
 import { useNavigate, useParams } from "react-router-dom";
+import { getAlunoById, updateAluno } from "../../services/alunoService";
+import type { UpdateAlunoData } from "../../Models/aluno";
 import {
     Container,
     Title,
@@ -92,16 +94,7 @@ function UpdateAlunos() {
             console.log("Buscando aluno com ID:", id);
 
             try {
-                const response = await fetch(`http://localhost:3000/alunos/${id}`);
-                
-                console.log("Status da resposta:", response.status);
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `Erro HTTP ${response.status}`);
-                }
-
-                const aluno = await response.json();
+                const aluno = await getAlunoById(parseInt(id));
                 console.log("Dados do aluno recebidos:", aluno);
                 
                 // Preencher o formulário com os dados do aluno (aplicando formatação)
@@ -115,7 +108,7 @@ function UpdateAlunos() {
                     cidade: aluno.cidade || "",
                     endereco: aluno.endereco || "",
                     responsavel_financeiro: aluno.responsavel_financeiro || "",
-                    data_nascimento: formatDateForInput(aluno.data_nascimento) || "",
+                    data_nascimento: aluno.data_nascimento ? formatDateForInput(aluno.data_nascimento) : "",
                 });
                 
                 setMessage(null);
@@ -123,7 +116,18 @@ function UpdateAlunos() {
                 
             } catch (error: any) {
                 console.error("Erro ao buscar aluno:", error);
-                setMessage(error.message || "Erro ao carregar dados do aluno");
+                
+                // Tratamento de erros do axios
+                if (error.response) {
+                    const errorMessage = error.response.data?.message || 
+                                       error.response.data?.error || 
+                                       "Erro ao carregar dados do aluno";
+                    setMessage(errorMessage);
+                } else if (error.request) {
+                    setMessage("Erro de conexão com o servidor");
+                } else {
+                    setMessage("Erro inesperado ao carregar dados");
+                }
                 setSuccess(false);
             } finally {
                 setLoading(false);
@@ -144,6 +148,16 @@ function UpdateAlunos() {
             formattedValue = formatCEP(value);
         } else if (name === "telefone") {
             formattedValue = formatPhone(value);
+        } else if (name === "nome" || name === "cidade" || name === "responsavel_financeiro") {
+            // Capitalizar primeira letra de cada palavra
+            formattedValue = value
+                .toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        } else if (name === "email") {
+            // Manter email em minúsculas
+            formattedValue = value.toLowerCase();
         }
 
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
@@ -160,13 +174,17 @@ function UpdateAlunos() {
         setLoadingUpdate(true);
 
         try {
+            if (!id) {
+                throw new Error("ID do aluno não encontrado");
+            }
+
             // Preparar dados para envio (remover formatação)
-            const dataToSend = {
+            const dataToSend: UpdateAlunoData = {
                 nome: formData.nome.trim(),
                 email: formData.email.trim(),
                 cpf: formData.cpf.replace(/\D/g, ""),
                 telefone: formData.telefone ? formData.telefone.replace(/\D/g, "") : undefined,
-                sexo: formData.sexo || undefined,
+                sexo: formData.sexo ? (formData.sexo as "M" | "F") : undefined,
                 cep: formData.cep ? formData.cep.replace(/\D/g, "") : undefined,
                 cidade: formData.cidade.trim() || undefined,
                 endereco: formData.endereco.trim() || undefined,
@@ -176,41 +194,41 @@ function UpdateAlunos() {
 
             // Remover campos undefined ou vazios
             Object.keys(dataToSend).forEach(key => {
-                const value = dataToSend[key as keyof typeof dataToSend];
+                const value = dataToSend[key as keyof UpdateAlunoData];
                 if (value === undefined || value === "" || value === null) {
-                    delete dataToSend[key as keyof typeof dataToSend];
+                    delete dataToSend[key as keyof UpdateAlunoData];
                 }
             });
 
             console.log("Enviando dados:", dataToSend);
 
-            const response = await fetch(`http://localhost:3000/alunos/${id}`, {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(dataToSend),
-            });
+            // Usar o service em vez de fetch direto
+            const result = await updateAluno(parseInt(id), dataToSend);
+            console.log("Resposta da API:", result);
 
-            const data = await response.json();
-            console.log("Resposta da API:", data);
+            setSuccess(true);
+            setMessage("Aluno atualizado com sucesso!");
+            
+            // Redirecionar após sucesso
+            setTimeout(() => {
+                navigate("/listAlunos");
+            }, 1500);
 
-            if (!response.ok) {
-                setSuccess(false);
-                setMessage(data.message || "Erro ao atualizar aluno");
-            } else {
-                setSuccess(true);
-                setMessage("Aluno atualizado com sucesso!");
-                
-                // Redirecionar após sucesso
-                setTimeout(() => {
-                    navigate("/listAlunos");
-                }, 1500);
-            }
         } catch (error: any) {
             console.error("Erro ao atualizar aluno:", error);
             setSuccess(false);
-            setMessage("Erro de conexão com o servidor");
+            
+            // Tratamento de erros do axios
+            if (error.response) {
+                const errorMessage = error.response.data?.message || 
+                                   error.response.data?.error || 
+                                   "Erro ao atualizar aluno";
+                setMessage(errorMessage);
+            } else if (error.request) {
+                setMessage("Erro de conexão com o servidor");
+            } else {
+                setMessage("Erro inesperado");
+            }
         } finally {
             setLoadingUpdate(false);
         }
