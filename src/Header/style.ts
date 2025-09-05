@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const HeaderContainer = styled.header`
   width: 100%;
-  height: 10vh;
+  height: 8vh;
   background-color: #333;
   display: flex;
   align-items: center;
@@ -10,7 +10,7 @@ export const HeaderContainer = styled.header`
 `;
 
 export const LeftMenu = styled.div`
-  width: 30%;
+  width: 35%;
   height: 10vh;
   display: flex;
   align-items: center;
@@ -116,7 +116,48 @@ export const DropdownItem = styled.button`
   }
 `;
 
-export const SubButton = styled.h4`
+export const SubButton = styled.h5`
   margin-top: 1.7rem;
   cursor: pointer;
+`;
+
+export const CadastroMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+`;
+
+export const CadastroItem = styled.button`
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    color: #ca2222ff;
+  }
+  
+  &:first-child {
+    border-top: none;
+  }
+  
+  &:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+  }
 `;

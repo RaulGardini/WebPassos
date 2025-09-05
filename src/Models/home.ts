@@ -13,6 +13,7 @@ export interface EscolaInfoData {
     total_salas: number;
     total_modalidades: number;
     total_cargos: number;
+    total_fornecedores: number;
   };
 }
 

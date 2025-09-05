@@ -23,6 +23,10 @@ import UpdateTurmasHorarios from "./Screens/Turmas//updateTurmasHorarios";
 import AddMatricula from "./Screens/Turmas/addMatricula";
 // TurmasHoje
 import TurmasHoje from "./Screens/TurmasHoje/turmasHoje"
+//Fornecedor
+import ListFornecedor from "./Screens/Fornecedores/listFornecedor";
+import AddFornecedor from "./Screens/Fornecedores/addFornecedores";
+import UpdateFornecedor from "./Screens/Fornecedores/updateFornecedor"
 
 function App() {
   return (
@@ -51,6 +55,10 @@ function App() {
         <Route path="/turmas/:turmaId/matriculas" element={<AddMatricula />} />
         {/* TurmasHoje */}
         <Route path="turmasHoje" element={<TurmasHoje />} />
+        {/* Fornecedor */}
+        <Route path="/listFornecedores" element={<ListFornecedor />} />
+        <Route path="/addFornecedores" element={<AddFornecedor />} />
+        <Route path="/updateFornecedores/:id" element={<UpdateFornecedor />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Header from "../../Header/header";
 import { useNavigate } from "react-router-dom";
+import { createAluno } from "../../services/alunoService";
+import type { CreateAlunoData } from "../../Models/aluno";
 import {
     Container,
     Title,
@@ -61,39 +63,6 @@ function AddAlunos() {
         return cleanValue.substring(0, 11).replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
     };
 
-    // Função para validar CPF (opcional - melhora UX)
-    const isValidCPF = (cpf: string) => {
-        const cleanCPF = cpf.replace(/\D/g, "");
-        
-        if (cleanCPF.length !== 11) return false;
-        
-        // Verificar se todos os dígitos são iguais
-        if (/^(\d)\1{10}$/.test(cleanCPF)) return false;
-        
-        // Algoritmo de validação do CPF
-        let sum = 0;
-        let remainder;
-        
-        for (let i = 1; i <= 9; i++) {
-            sum += parseInt(cleanCPF.substring(i - 1, i)) * (11 - i);
-        }
-        
-        remainder = (sum * 10) % 11;
-        if (remainder === 10 || remainder === 11) remainder = 0;
-        if (remainder !== parseInt(cleanCPF.substring(9, 10))) return false;
-        
-        sum = 0;
-        for (let i = 1; i <= 10; i++) {
-            sum += parseInt(cleanCPF.substring(i - 1, i)) * (12 - i);
-        }
-        
-        remainder = (sum * 10) % 11;
-        if (remainder === 10 || remainder === 11) remainder = 0;
-        if (remainder !== parseInt(cleanCPF.substring(10, 11))) return false;
-        
-        return true;
-    };
-
     // Função para validar campos
     const validateFields = () => {
         const errors = [];
@@ -102,29 +71,6 @@ function AddAlunos() {
             errors.push("Nome é obrigatório");
         }
 
-        if (!formData.email.trim()) {
-            errors.push("E-mail é obrigatório");
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            errors.push("E-mail inválido");
-        }
-
-        if (!formData.cpf.trim()) {
-            errors.push("CPF é obrigatório");
-        } else if (!isValidCPF(formData.cpf)) {
-            errors.push("CPF inválido");
-        }
-
-        if (!formData.data_nascimento) {
-            errors.push("Data de nascimento é obrigatória");
-        } else {
-            const birthDate = new Date(formData.data_nascimento);
-            const today = new Date();
-            const age = today.getFullYear() - birthDate.getFullYear();
-            
-            if (age < 0 || age > 120) {
-                errors.push("Data de nascimento inválida");
-            }
-        }
 
         if (formData.cep && formData.cep.replace(/\D/g, "").length !== 8) {
             errors.push("CEP deve ter 8 dígitos");
@@ -184,65 +130,70 @@ function AddAlunos() {
 
         try {
             // Preparar dados para envio (remover formatação)
-            const dataToSend = {
+            const dataToSend: CreateAlunoData = {
                 nome: formData.nome.trim(),
                 email: formData.email.trim(),
                 cpf: formData.cpf.replace(/\D/g, ""),
                 telefone: formData.telefone ? formData.telefone.replace(/\D/g, "") : undefined,
-                sexo: formData.sexo || undefined,
+                sexo: formData.sexo ? (formData.sexo as "M" | "F") : undefined,
                 cep: formData.cep ? formData.cep.replace(/\D/g, "") : undefined,
                 cidade: formData.cidade.trim() || undefined,
                 endereco: formData.endereco.trim() || undefined,
                 responsavel_financeiro: formData.responsavel_financeiro.trim() || undefined,
-                data_nascimento: formData.data_nascimento ? new Date(formData.data_nascimento + 'T00:00:00.000Z') : undefined,
+                data_nascimento: new Date(formData.data_nascimento + 'T00:00:00.000Z'),
             };
 
             // Remover campos undefined ou vazios (exceto campos obrigatórios)
             Object.keys(dataToSend).forEach(key => {
-                const value = dataToSend[key as keyof typeof dataToSend];
+                const value = dataToSend[key as keyof CreateAlunoData];
                 if (value === undefined || value === "") {
-                    delete dataToSend[key as keyof typeof dataToSend];
+                    delete dataToSend[key as keyof CreateAlunoData];
                 }
             });
 
             console.log("Enviando dados:", dataToSend);
 
-            const response = await fetch("http://localhost:3000/alunos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dataToSend),
-            });
+            // Usar o service em vez de fetch direto
+            const result = await createAluno(dataToSend);
+            
+            setSuccess(true);
+            setMessage("Aluno cadastrado com sucesso!");
+            
+            // Limpar formulário após sucesso
+            setTimeout(() => {
+                setFormData({
+                    nome: "",
+                    email: "",
+                    cpf: "",
+                    telefone: "",
+                    sexo: "",
+                    cep: "",
+                    cidade: "",
+                    endereco: "",
+                    responsavel_financeiro: "",
+                    data_nascimento: "",
+                });
+                setMessage(null);
+            }, 2000);
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                setSuccess(false);
-                setMessage(data.message || "Erro ao cadastrar aluno");
-            } else {
-                setSuccess(true);
-                setMessage("Aluno cadastrado com sucesso!");
-                
-                // Limpar formulário após sucesso
-                setTimeout(() => {
-                    setFormData({
-                        nome: "",
-                        email: "",
-                        cpf: "",
-                        telefone: "",
-                        sexo: "",
-                        cep: "",
-                        cidade: "",
-                        endereco: "",
-                        responsavel_financeiro: "",
-                        data_nascimento: "",
-                    });
-                    setMessage(null);
-                }, 2000);
-            }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Erro ao cadastrar aluno:", error);
             setSuccess(false);
-            setMessage("Erro de conexão com o servidor");
+            
+            // Tratar diferentes tipos de erro do axios
+            if (error.response) {
+                // Erro de resposta da API
+                const errorMessage = error.response.data?.message || 
+                                   error.response.data?.error || 
+                                   "Erro ao cadastrar aluno";
+                setMessage(errorMessage);
+            } else if (error.request) {
+                // Erro de conexão
+                setMessage("Erro de conexão com o servidor");
+            } else {
+                // Outros erros
+                setMessage("Erro inesperado");
+            }
         } finally {
             setLoading(false);
         }

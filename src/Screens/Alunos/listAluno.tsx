@@ -6,6 +6,7 @@ import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiUsers } from "react
 import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa";
+import { getAlunos, deleteAluno } from "../../services/alunoService";
 import {
     Container,
     Title,
@@ -62,33 +63,11 @@ function ListAlunos() {
         setIsModalOpen(false);
     };
 
-    // Função para buscar alunos da API
+    // Função para buscar alunos usando o service
     const fetchAlunos = async (searchFilters?: AlunoFilters) => {
         try {
             setLoading(true);
-
-            let url = 'http://localhost:3000/alunos';
-
-            // Se há filtros, usa o endpoint de filtros
-            if (searchFilters && Object.values(searchFilters).some(filter => filter.trim() !== '')) {
-                const queryParams = new URLSearchParams();
-
-                Object.entries(searchFilters).forEach(([key, value]) => {
-                    if (value && value.trim() !== '') {
-                        queryParams.append(key, value.trim());
-                    }
-                });
-
-                url = `http://localhost:3000/alunos/filter?${queryParams.toString()}`;
-            }
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error('Erro ao buscar alunos');
-            }
-
-            const data = await response.json();
+            const data = await getAlunos(searchFilters);
             setAlunos(data);
             setError(null);
         } catch (err) {
@@ -148,25 +127,21 @@ function ListAlunos() {
         return telefone;
     };
 
+    // Função para formatar sexo
+    const formatSexo = (sexo?: string) => {
+        if (!sexo) return '';
+        return sexo === 'M' ? 'Masculino' : 'Feminino';
+    };
+
     const handleDelete = async (aluno_id: number) => {
         if (!window.confirm("Tem certeza que deseja deletar este aluno?")) return;
 
         try {
-            const response = await fetch(`http://localhost:3000/alunos/${aluno_id}`, {
-                method: "DELETE",
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                alert(errorData.message || "Erro ao deletar aluno");
-                return;
-            }
-
+            await deleteAluno(aluno_id);
             alert("Aluno deletado com sucesso!");
-
             setAlunos((prev) => prev.filter((aluno) => aluno.aluno_id !== aluno_id));
         } catch (error) {
-            alert("Erro de conexão com o servidor");
+            alert(error instanceof Error ? error.message : "Erro ao deletar aluno");
         }
     };
 
@@ -180,6 +155,12 @@ function ListAlunos() {
             idade--;
         }
         return `${idade} anos`;
+    };
+
+    const formatDataCriacao = (dataString?: string) => {
+        if (!dataString) return '';
+        const data = new Date(dataString);
+        return data.toLocaleDateString('pt-BR');
     };
 
     return (
@@ -343,21 +324,25 @@ function ListAlunos() {
                         </Table>
                     )}
                 </TableContainer>
+
+                {/* Modal de Detalhes */}
                 {isModalOpen && selectedAluno && (
                     <Modal>
                         <InfoModal>
                             <h2>Detalhes do Aluno</h2>
+                            <p><strong>ID:</strong> {selectedAluno.aluno_id}</p>
                             <p><strong>Nome:</strong> {selectedAluno.nome}</p>
                             <p><strong>Email:</strong> {selectedAluno.email}</p>
                             <p><strong>CPF:</strong> {formatCpf(selectedAluno.cpf)}</p>
                             <p><strong>Telefone:</strong> {formatTelefone(selectedAluno.telefone || '')}</p>
-                            <p><strong>Data Nascimento:</strong> {selectedAluno.data_nascimento}</p>
-                            <p><strong>Cidade:</strong> {selectedAluno.cidade}</p>
-                            <p><strong>Endereço:</strong> {selectedAluno.endereco}</p>
-                            <p><strong>CEP:</strong> {selectedAluno.cep}</p>
-                            <p><strong>Responsável Financeiro: </strong> {selectedAluno.responsavel_financeiro}</p>
-                            <p><strong>Sexo:</strong> {selectedAluno.sexo}</p>
-                            <p><strong>Data de Criação:</strong> {selectedAluno.data_criacao}</p>
+                            <p><strong>Sexo:</strong> {formatSexo(selectedAluno.sexo)}</p>
+                            <p><strong>Data de Nascimento:</strong> {selectedAluno.data_nascimento ? new Date(selectedAluno.data_nascimento).toLocaleDateString('pt-BR') : '-'}</p>
+                            <p><strong>Idade:</strong> {calcularIdade(selectedAluno.data_nascimento || '')}</p>
+                            <p><strong>Cidade:</strong> {selectedAluno.cidade || '-'}</p>
+                            <p><strong>Endereço:</strong> {selectedAluno.endereco || '-'}</p>
+                            <p><strong>CEP:</strong> {selectedAluno.cep || '-'}</p>
+                            <p><strong>Responsável Financeiro:</strong> {selectedAluno.responsavel_financeiro || '-'}</p>
+                            <p><strong>Data de Criação:</strong> {formatDataCriacao(selectedAluno.data_criacao)}</p>
                             <button onClick={closeAlunoModal} style={{
                                 marginTop: '1rem',
                                 padding: '0.5rem 1rem',
