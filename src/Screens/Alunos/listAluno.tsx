@@ -5,7 +5,7 @@ import { IoAdd } from "react-icons/io5";
 import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiUsers } from "react-icons/fi";
 import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { FaEye } from "react-icons/fa";
+import { FaEye, FaGraduationCap } from "react-icons/fa";
 import { getAlunos, deleteAluno } from "../../services/alunoService";
 import {
     Container,
@@ -301,6 +301,12 @@ function ListAlunos() {
                                         <TableCell>{calcularIdade(aluno.data_nascimento || '')}</TableCell>
                                         <TableCell textAlign="center">
                                             <ActionButtons>
+                                                <EditButton
+                                                    onClick={() => navigate(`/listTurmasAluno/${aluno.aluno_id}`)}
+                                                    title="Gerenciar turmas"
+                                                >
+                                                    <FaGraduationCap />
+                                                </EditButton>
                                                 <EditButton
                                                     onClick={() => navigate(`/updateAluno/${aluno.aluno_id}`)}
                                                 >

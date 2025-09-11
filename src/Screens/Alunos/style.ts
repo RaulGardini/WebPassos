@@ -387,3 +387,152 @@ export const InfoModal = styled.div`
   width: 90%;
   font-family: Arial, sans-serif;
 `;
+
+export const TabContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  width: 40%;
+  margin: 2rem auto;
+  background-color: #f8f8f8ff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+`;
+
+export const Tab = styled.button<{ active: boolean }>`
+  padding: 1rem 5rem;
+  border: none;
+  background: ${props => props.active ? '#ee0c0cff' : '#e7e7e7ff'};
+  color: ${props => props.active ? 'white' : '#6c757d'};
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px 0 0 10px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${props => props.active ? '#ff7a7aff' : '#e9e9e9ff'};
+    color: ${props => props.active ? 'white' : '#495057'};
+  }
+`;
+
+export const AlunoInfo = styled.div`
+font-family: 'Arial', sans-serif;
+  background: #f3f3f3ff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  
+  h3 {
+    margin: 0;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+`;
+
+export const TurmasGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+`;
+
+export const TurmaCard = styled.div`
+  background: white;
+  border: 0.5px solid #ff0000ff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+`;
+
+export const TurmaHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  
+  h4 {
+    margin: 0;
+    color: #495057;
+    font-size: 1.2rem;
+  }
+`;
+
+export const TurmaInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+    
+    svg {
+      color: #007bff;
+    }
+  }
+`;
+
+export const ActionButton = styled.button<{ variant?: 'primary' | 'danger' }>`
+  background: ${props => 
+    props.variant === 'danger' ? '#dc3545' : '#28a745'
+  };
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${props => 
+      props.variant === 'danger' ? '#c82333' : '#218838'
+    };
+  }
+  
+  &:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+  }
+`;
+
+export const StatusBadge = styled.span<{ lotada?: boolean }>`
+  background: ${props => props.lotada ? '#dc3545' : '#28a745'};
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+`;
+
+export const MatriculaInfo = styled.div`
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  
+  p {
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    color: #1565c0;
+    
+    strong {
+      color: #0d47a1;
+    }
+  }
+`;

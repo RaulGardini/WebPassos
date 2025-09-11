@@ -39,3 +39,21 @@ export const getTurmaInfo = async (turma_id: number): Promise<TurmaInfo> => {
   const response = await axios.get(`${API_URL}/turmas/${turma_id}/info`);
   return response.data.data;
 };
+
+// GET turmas onde o aluno está matriculado
+export const getTurmasDoAluno = async (aluno_id: number): Promise<Matricula[]> => {
+  const response = await axios.get(`${API_URL}/alunos/${aluno_id}/turmas-matriculadas`);
+  return response.data.data;
+};
+
+// GET turmas disponíveis para matrícula do aluno
+export const getTurmasDisponiveis = async (aluno_id: number): Promise<any[]> => {
+  const response = await axios.get(`${API_URL}/alunos/${aluno_id}/turmas-disponiveis`);
+  return response.data.data;
+};
+
+// POST matricular aluno em turma específica
+export const matricularAlunoNaTurma = async (aluno_id: number, turma_id: number) => {
+  const response = await axios.post(`${API_URL}/alunos/${aluno_id}/matricular/${turma_id}`);
+  return response.data;
+};
