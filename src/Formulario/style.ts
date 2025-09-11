@@ -14,10 +14,10 @@ export const FormularioContainer = styled.div`
 export const Form = styled.form`
   background-color: #d3d3d3ff;
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-family: 'Arial', sans-serif;
-  border-radius: 12px;
-  width: 20%;
+  border-radius: 10px;
+  width: 15%;
 
   form {
     display: flex;
@@ -39,6 +39,7 @@ export const Form = styled.form`
 `;
 
 export const Title = styled.h1`
+margin-top: -10rem;
   font-size: 5rem;
   font-weight: 900;
   font-family: 'Arial', sans-serif;
