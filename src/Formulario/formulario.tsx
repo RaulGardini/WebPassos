@@ -12,10 +12,14 @@ function Formulario() {
   const [login, setLogin] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // evita o refresh da página
+    
+    setIsLoading(true); // inicia o loading
+    setMensagem(""); // limpa mensagens anteriores
 
     try {
       const response = await axios.post("http://localhost:3000/usuarios/login", {
@@ -34,6 +38,8 @@ function Formulario() {
       } else {
         setMensagem("❌ Erro de conexão com o servidor");
       }
+    } finally {
+      setIsLoading(false); // finaliza o loading
     }
   };
 
@@ -47,6 +53,7 @@ function Formulario() {
           placeholder="Usuário"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
+          disabled={isLoading}
         />
 
         <label htmlFor="senha">Senha</label>
@@ -55,9 +62,12 @@ function Formulario() {
           placeholder="Senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
+          disabled={isLoading}
         />
 
-        <Button type="submit">Entrar</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Carregando..." : "Entrar"}
+        </Button>
       </Form>
 
       {mensagem && <p>{mensagem}</p>}
