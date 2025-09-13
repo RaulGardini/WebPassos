@@ -42,11 +42,11 @@ export interface UpdateAlunoData {
 }
 
 export interface AlunoFilters {
-    nome: string;
-    email: string;
-    telefone: string;
-    cidade: string;
-    responsavel_financeiro: string;
+    nome?: string;
+    email?: string;
+    telefone?: string;
+    cidade?: string;
+    responsavel_financeiro?: string;
 }
 export interface Modalidade {
   modalidade_id: number;

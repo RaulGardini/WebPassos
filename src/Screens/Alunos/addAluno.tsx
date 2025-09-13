@@ -154,27 +154,14 @@ function AddAlunos() {
             console.log("Enviando dados:", dataToSend);
 
             // Usar o service em vez de fetch direto
-            const result = await createAluno(dataToSend);
+            await createAluno(dataToSend);
             
             setSuccess(true);
             setMessage("Aluno cadastrado com sucesso!");
             
-            // Limpar formulário após sucesso
             setTimeout(() => {
-                setFormData({
-                    nome: "",
-                    email: "",
-                    cpf: "",
-                    telefone: "",
-                    sexo: "",
-                    cep: "",
-                    cidade: "",
-                    endereco: "",
-                    responsavel_financeiro: "",
-                    data_nascimento: "",
-                });
-                setMessage(null);
-            }, 2000);
+                navigate(`/listAlunos`);
+            }, 1000);
 
         } catch (error: any) {
             console.error("Erro ao cadastrar aluno:", error);

@@ -403,7 +403,7 @@ export const TabContainer = styled.div`
 export const Tab = styled.button<{ active: boolean }>`
   padding: 1rem 5rem;
   border: none;
-  background: ${props => props.active ? '#ee0c0cff' : '#e7e7e7ff'};
+  background: ${props => props.active ? '#333' : '#e7e7e7ff'};
   color: ${props => props.active ? 'white' : '#6c757d'};
   font-weight: 600;
   cursor: pointer;
@@ -411,7 +411,7 @@ export const Tab = styled.button<{ active: boolean }>`
   transition: all 0.3s ease;
   
   &:hover {
-    background: ${props => props.active ? '#ff7a7aff' : '#e9e9e9ff'};
+    background: ${props => props.active ? '#535353ff' : '#e9e9e9ff'};
     color: ${props => props.active ? 'white' : '#495057'};
   }
 `;
@@ -484,7 +484,7 @@ export const TurmaInfo = styled.div`
 
 export const ActionButton = styled.button<{ variant?: 'primary' | 'danger' }>`
   background: ${props => 
-    props.variant === 'danger' ? '#dc3545' : '#28a745'
+    props.variant === 'danger' ? '#dc3545' : '#007bff'
   };
   color: white;
   border: none;
@@ -501,7 +501,7 @@ export const ActionButton = styled.button<{ variant?: 'primary' | 'danger' }>`
   
   &:hover {
     background: ${props => 
-      props.variant === 'danger' ? '#c82333' : '#218838'
+      props.variant === 'danger' ? '#c82333' : '#0056b3'
     };
   }
   
@@ -535,4 +535,41 @@ export const MatriculaInfo = styled.div`
       color: #0d47a1;
     }
   }
+`;
+
+export const PaginationContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 1rem;
+`;
+
+export const PaginationControls = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+`;
+
+export const PaginationButton = styled.button<{ disabled?: boolean; active?: boolean }>`
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dee2e6;
+    background-color: ${props => props.active ? '#333' : props.disabled ? '#f8f9fa' : 'white'};
+    color: ${props => props.active ? 'white' : props.disabled ? '#6c757d' : '#white'};
+    border-radius: 4px;
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+    font-size: 0.9rem;
+    min-width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+        background-color: ${props => props.active ? '#5c5c5cff' : '#e9ecef'};
+    }
+
+    &:disabled {
+        opacity: 0.6;
+    }
 `;

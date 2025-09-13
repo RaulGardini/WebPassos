@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import Header from "../../Header/header";
 import type { Aluno, AlunoFilters } from "../../Models/aluno";
 import { IoAdd } from "react-icons/io5";
-import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiUsers } from "react-icons/fi";
+import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiUsers, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaGraduationCap } from "react-icons/fa";
-import { getAlunos, deleteAluno } from "../../services/alunoService";
+import { getAlunos, deleteAluno, type PaginatedResponse, type PaginationParams } from "../../services/alunoService";
 import {
     Container,
     Title,
@@ -34,9 +34,21 @@ import {
     ClearButton,
     EditButton,
     Modal,
-    InfoModal
+    InfoModal,
+    PaginationContainer,
+    PaginationControls,
+    PaginationButton
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+
+interface PaginationState {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    itemsPerPage: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+}
 
 function ListAlunos() {
     const [alunos, setAlunos] = useState<Aluno[]>([]);
@@ -52,6 +64,17 @@ function ListAlunos() {
     });
     const [selectedAluno, setSelectedAluno] = useState<Aluno | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    // Estados para paginação
+    const [pagination, setPagination] = useState<PaginationState>({
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 25,
+        hasNext: false,
+        hasPrev: false
+    });
+    const [itemsPerPage] = useState(35);
 
     const openAlunoModal = (aluno: Aluno) => {
         setSelectedAluno(aluno);
@@ -63,24 +86,82 @@ function ListAlunos() {
         setIsModalOpen(false);
     };
 
+    // Função para verificar se há filtros ativos
+    const hasActiveFilters = (searchFilters: AlunoFilters): boolean => {
+        return Object.values(searchFilters).some(value => value && value.trim() !== '');
+    };
+
+    // Função para limpar filtros vazios
+    const cleanFilters = (searchFilters: AlunoFilters): AlunoFilters | undefined => {
+        const cleaned: AlunoFilters = {};
+        let hasFilters = false;
+        
+        Object.entries(searchFilters).forEach(([key, value]) => {
+            if (value && value.trim() !== '') {
+                cleaned[key as keyof AlunoFilters] = value.trim();
+                hasFilters = true;
+            }
+        });
+        
+        return hasFilters ? cleaned : undefined;
+    };
+
     // Função para buscar alunos usando o service
-    const fetchAlunos = async (searchFilters?: AlunoFilters) => {
+    const fetchAlunos = async (searchFilters?: AlunoFilters, page: number = 1, limit: number = itemsPerPage) => {
         try {
             setLoading(true);
-            const data = await getAlunos(searchFilters);
-            setAlunos(data);
             setError(null);
+            
+            const cleanedFilters = searchFilters ? cleanFilters(searchFilters) : undefined;
+            const paginationParams: PaginationParams = { page, limit };
+            
+            console.log('Buscando alunos com:', { filters: cleanedFilters, pagination: paginationParams });
+            
+            const result = await getAlunos(cleanedFilters, paginationParams);
+            
+            // Verifica se o resultado tem paginação
+            if (result && typeof result === 'object' && 'data' in result && 'pagination' in result) {
+                const paginatedResult = result as PaginatedResponse<Aluno>;
+                console.log('Resultado paginado recebido:', paginatedResult);
+                setAlunos(paginatedResult.data);
+                setPagination(paginatedResult.pagination);
+            } else {
+                // Fallback para caso o backend retorne array simples
+                console.log('Resultado simples recebido:', result);
+                const alunosArray = result as Aluno[];
+                setAlunos(alunosArray);
+                setPagination({
+                    currentPage: 1,
+                    totalPages: 1,
+                    totalItems: alunosArray.length,
+                    itemsPerPage: alunosArray.length,
+                    hasNext: false,
+                    hasPrev: false
+                });
+            }
+            
         } catch (err) {
+            console.error('Erro ao buscar alunos:', err);
             setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            setAlunos([]);
+            setPagination({
+                currentPage: 1,
+                totalPages: 1,
+                totalItems: 0,
+                itemsPerPage: limit,
+                hasNext: false,
+                hasPrev: false
+            });
         } finally {
             setLoading(false);
         }
     };
 
-    // Carregar alunos ao montar o componente
+    // Carregar alunos ao montar o componente e quando itemsPerPage mudar
     useEffect(() => {
-        fetchAlunos();
-    }, []);
+        console.log('Effect triggered - carregando alunos...');
+        fetchAlunos(undefined, 1, itemsPerPage);
+    }, [itemsPerPage]);
 
     // Função para lidar com mudanças nos filtros
     const handleFilterChange = (field: keyof AlunoFilters, value: string) => {
@@ -90,9 +171,10 @@ function ListAlunos() {
         }));
     };
 
-    // Função para aplicar filtros
+    // Função para aplicar filtros (sempre volta para página 1)
     const applyFilters = () => {
-        fetchAlunos(filters);
+        console.log('Aplicando filtros:', filters);
+        fetchAlunos(filters, 1, itemsPerPage);
     };
 
     // Função para limpar filtros
@@ -105,7 +187,37 @@ function ListAlunos() {
             responsavel_financeiro: ''
         };
         setFilters(emptyFilters);
-        fetchAlunos(); // Busca todos os alunos novamente
+        fetchAlunos(undefined, 1, itemsPerPage);
+    };
+
+    // Funções de paginação
+    const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= pagination.totalPages) {
+            console.log('Mudando para página:', page);
+            const activeFilters = hasActiveFilters(filters) ? filters : undefined;
+            fetchAlunos(activeFilters, page, itemsPerPage);
+        }
+    };
+
+    // Gera números das páginas para exibir
+    const getPageNumbers = () => {
+        const pages = [];
+        const maxVisible = 5;
+        const current = pagination.currentPage;
+        const total = pagination.totalPages;
+        
+        let start = Math.max(1, current - Math.floor(maxVisible / 2));
+        let end = Math.min(total, start + maxVisible - 1);
+        
+        if (end - start + 1 < maxVisible) {
+            start = Math.max(1, end - maxVisible + 1);
+        }
+        
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        
+        return pages;
     };
 
     // Função para formatar CPF
@@ -139,7 +251,10 @@ function ListAlunos() {
         try {
             await deleteAluno(aluno_id);
             alert("Aluno deletado com sucesso!");
-            setAlunos((prev) => prev.filter((aluno) => aluno.aluno_id !== aluno_id));
+            
+            // Recarrega a página atual após deletar
+            const activeFilters = hasActiveFilters(filters) ? filters : undefined;
+            fetchAlunos(activeFilters, pagination.currentPage, itemsPerPage);
         } catch (error) {
             alert(error instanceof Error ? error.message : "Erro ao deletar aluno");
         }
@@ -187,6 +302,7 @@ function ListAlunos() {
                                 placeholder="Digite o nome do aluno..."
                                 value={filters.nome}
                                 onChange={(e) => handleFilterChange('nome', e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
                             />
                         </FilterGroup>
 
@@ -200,6 +316,7 @@ function ListAlunos() {
                                 placeholder="Digite o e-mail..."
                                 value={filters.email}
                                 onChange={(e) => handleFilterChange('email', e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
                             />
                         </FilterGroup>
 
@@ -213,6 +330,7 @@ function ListAlunos() {
                                 placeholder="Digite o telefone..."
                                 value={filters.telefone}
                                 onChange={(e) => handleFilterChange('telefone', e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
                             />
                         </FilterGroup>
 
@@ -226,6 +344,7 @@ function ListAlunos() {
                                 placeholder="Digite a cidade..."
                                 value={filters.cidade}
                                 onChange={(e) => handleFilterChange('cidade', e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
                             />
                         </FilterGroup>
 
@@ -239,6 +358,7 @@ function ListAlunos() {
                                 placeholder="Digite o nome do responsável..."
                                 value={filters.responsavel_financeiro}
                                 onChange={(e) => handleFilterChange('responsavel_financeiro', e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
                             />
                         </FilterGroup>
                         <FilterActions>
@@ -247,7 +367,7 @@ function ListAlunos() {
                                 {loading ? 'Buscando...' : 'Buscar'}
                             </FilterButton>
 
-                            <ClearButton onClick={clearFilters}>
+                            <ClearButton onClick={clearFilters} disabled={loading}>
                                 <FiX />
                                 Limpar Filtros
                             </ClearButton>
@@ -276,58 +396,97 @@ function ListAlunos() {
                     )}
 
                     {!loading && !error && alunos.length > 0 && (
-                        <Table>
-                            <TableHeader>
-                                <tr>
-                                    <TableHeaderCell>ID</TableHeaderCell>
-                                    <TableHeaderCell>Nome</TableHeaderCell>
-                                    <TableHeaderCell>Email</TableHeaderCell>
-                                    <TableHeaderCell>CPF</TableHeaderCell>
-                                    <TableHeaderCell>Telefone</TableHeaderCell>
-                                    <TableHeaderCell>Cidade</TableHeaderCell>
-                                    <TableHeaderCell>Idade</TableHeaderCell>
-                                    <TableHeaderCell className="center">Ações</TableHeaderCell>
-                                </tr>
-                            </TableHeader>
-                            <TableBody>
-                                {alunos.map((aluno, index) => (
-                                    <TableRow key={aluno.aluno_id} index={index}>
-                                        <TableCell>{aluno.aluno_id}</TableCell>
-                                        <TableCell fontWeight="500">{aluno.nome}</TableCell>
-                                        <TableCell color="#6c757d">{aluno.email}</TableCell>
-                                        <TableCell>{formatCpf(aluno.cpf)}</TableCell>
-                                        <TableCell>{formatTelefone(aluno.telefone || '')}</TableCell>
-                                        <TableCell>{aluno.cidade || '-'}</TableCell>
-                                        <TableCell>{calcularIdade(aluno.data_nascimento || '')}</TableCell>
-                                        <TableCell textAlign="center">
-                                            <ActionButtons>
-                                                <EditButton
-                                                    onClick={() => navigate(`/listTurmasAluno/${aluno.aluno_id}`)}
-                                                    title="Gerenciar turmas"
-                                                >
-                                                    <FaGraduationCap />
-                                                </EditButton>
-                                                <EditButton
-                                                    onClick={() => navigate(`/updateAluno/${aluno.aluno_id}`)}
-                                                >
-                                                    <MdEditSquare />
-                                                </EditButton>
-                                                <EditButton
-                                                    onClick={() => openAlunoModal(aluno)}
-                                                >
-                                                    <FaEye />
-                                                </EditButton>
-                                                <EditButton
-                                                    onClick={() => handleDelete(aluno.aluno_id)}
-                                                >
-                                                    <MdDelete />
-                                                </EditButton>
-                                            </ActionButtons>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        <>
+                            <Table>
+                                <TableHeader>
+                                    <tr>
+                                        <TableHeaderCell>ID</TableHeaderCell>
+                                        <TableHeaderCell>Nome</TableHeaderCell>
+                                        <TableHeaderCell>Email</TableHeaderCell>
+                                        <TableHeaderCell>CPF</TableHeaderCell>
+                                        <TableHeaderCell>Telefone</TableHeaderCell>
+                                        <TableHeaderCell>Cidade</TableHeaderCell>
+                                        <TableHeaderCell>Idade</TableHeaderCell>
+                                        <TableHeaderCell className="center">Ações</TableHeaderCell>
+                                    </tr>
+                                </TableHeader>
+                                <TableBody>
+                                    {alunos.map((aluno, index) => (
+                                        <TableRow key={aluno.aluno_id} index={index}>
+                                            <TableCell>{aluno.aluno_id}</TableCell>
+                                            <TableCell fontWeight="500">{aluno.nome}</TableCell>
+                                            <TableCell color="#6c757d">{aluno.email}</TableCell>
+                                            <TableCell>{formatCpf(aluno.cpf)}</TableCell>
+                                            <TableCell>{formatTelefone(aluno.telefone || '')}</TableCell>
+                                            <TableCell>{aluno.cidade || '-'}</TableCell>
+                                            <TableCell>{calcularIdade(aluno.data_nascimento || '')}</TableCell>
+                                            <TableCell textAlign="center">
+                                                <ActionButtons>
+                                                    <EditButton
+                                                        onClick={() => navigate(`/listTurmasAluno/${aluno.aluno_id}`)}
+                                                        title="Gerenciar turmas"
+                                                    >
+                                                        <FaGraduationCap />
+                                                    </EditButton>
+                                                    <EditButton
+                                                        onClick={() => navigate(`/updateAluno/${aluno.aluno_id}`)}
+                                                        title="Editar aluno"
+                                                    >
+                                                        <MdEditSquare />
+                                                    </EditButton>
+                                                    <EditButton
+                                                        onClick={() => openAlunoModal(aluno)}
+                                                        title="Ver detalhes"
+                                                    >
+                                                        <FaEye />
+                                                    </EditButton>
+                                                    <EditButton
+                                                        onClick={() => handleDelete(aluno.aluno_id)}
+                                                        title="Deletar aluno"
+                                                    >
+                                                        <MdDelete />
+                                                    </EditButton>
+                                                </ActionButtons>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+
+                            {/* Controles de Paginação */}
+                            {pagination.totalPages > 1 && (
+                                <PaginationContainer>
+                                    <PaginationControls>
+                                        <PaginationButton
+                                            onClick={() => handlePageChange(pagination.currentPage - 1)}
+                                            disabled={!pagination.hasPrev || loading}
+                                            title="Página anterior"
+                                        >
+                                            <FiChevronLeft />
+                                        </PaginationButton>
+
+                                        {getPageNumbers().map(pageNum => (
+                                            <PaginationButton
+                                                key={pageNum}
+                                                onClick={() => handlePageChange(pageNum)}
+                                                active={pageNum === pagination.currentPage}
+                                                disabled={loading}
+                                            >
+                                                {pageNum}
+                                            </PaginationButton>
+                                        ))}
+
+                                        <PaginationButton
+                                            onClick={() => handlePageChange(pagination.currentPage + 1)}
+                                            disabled={!pagination.hasNext || loading}
+                                            title="Próxima página"
+                                        >
+                                            <FiChevronRight />
+                                        </PaginationButton>
+                                    </PaginationControls>
+                                </PaginationContainer>
+                            )}
+                        </>
                     )}
                 </TableContainer>
 
