@@ -279,6 +279,18 @@ function Home() {
               Total de fornecedores na academia
             </CardSubtitle>
           </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                <FiUsers />
+                Total de usuarios
+              </CardTitle>
+            </CardHeader>
+            <CardValue>{ocupacaoData?.detalhes.total_usuarios || 0}</CardValue>
+            <CardSubtitle>
+              Total de usuarios do sistema
+            </CardSubtitle>
+          </Card>
         </DashboardGrid>
       </Container>
     </>

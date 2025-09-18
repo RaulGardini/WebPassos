@@ -5,7 +5,6 @@ import { IoAdd } from "react-icons/io5";
 import { FiSearch, FiX, FiUser, FiMail, FiPhone } from "react-icons/fi";
 import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { FaEye } from "react-icons/fa";
 import { getFornecedores, deleteFornecedor } from "../../services/fornecedorService";
 import {
     Container,
@@ -33,8 +32,6 @@ import {
     ActionButtons,
     ClearButton,
     EditButton,
-    Modal,
-    InfoModal
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
 
@@ -48,7 +45,6 @@ function ListFornecedores() {
         email: '',
         telefone: ''
     });
-    const [selectedFornecedor, setSelectedFornecedor] = useState<Fornecedor | null>(null);
 
     // Função para buscar fornecedores usando o service
     const fetchFornecedores = async (searchFilters?: FornecedorFilter) => {
@@ -116,12 +112,6 @@ function ListFornecedores() {
         } catch (error) {
             alert(error instanceof Error ? error.message : "Erro ao deletar fornecedor");
         }
-    };
-
-    const formatDataCriacao = (dataString?: string) => {
-        if (!dataString) return '';
-        const data = new Date(dataString);
-        return data.toLocaleDateString('pt-BR');
     };
 
     return (

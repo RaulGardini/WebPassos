@@ -13,33 +13,52 @@ function Formulario() {
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  const redirecionarPorTipo = (tipo: string) => {
+    switch (tipo) {
+      case 'Admin':
+        navigate("/home");
+        break;
+      case 'Professor':
+        navigate("/professor");
+        break;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // evita o refresh da página
+    e.preventDefault();
     
-    setIsLoading(true); // inicia o loading
-    setMensagem(""); // limpa mensagens anteriores
+    if (!login.trim() || !senha) {
+      setMensagem("❌ Preencha todos os campos");
+      return;
+    }
+    
+    setIsLoading(true);
+    setMensagem("");
 
     try {
       const response = await axios.post("http://localhost:3000/usuarios/login", {
-        login,
+        login: login.trim(),
         senha
       });
 
-      console.log("Usuário logado:", response.data.usuario);
-      navigate("/home");
+      const { usuario } = response.data;
+      
+      // Salva no localStorage (simples)
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+      
+      console.log("Login realizado:", usuario);
+      redirecionarPorTipo(usuario.tipo);
 
-      // 👉 aqui você poderia salvar no localStorage, por exemplo:
-      // localStorage.setItem("usuario", JSON.stringify(response.data.usuario));
     } catch (error: any) {
-      if (error.response) {
+      if (error.response?.data?.message) {
         setMensagem(`❌ ${error.response.data.message}`);
       } else {
-        setMensagem("❌ Erro de conexão com o servidor");
+        setMensagem("❌ Erro de conexão");
       }
     } finally {
-      setIsLoading(false); // finaliza o loading
+      setIsLoading(false);
     }
   };
 
@@ -50,7 +69,8 @@ function Formulario() {
         <label htmlFor="usuario">Usuário</label>
         <input
           type="text"
-          placeholder="Usuário"
+          id="usuario"
+          placeholder="Digite seu usuário"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
           disabled={isLoading}
@@ -59,18 +79,26 @@ function Formulario() {
         <label htmlFor="senha">Senha</label>
         <input
           type="password"
-          placeholder="Senha"
+          id="senha"
+          placeholder="Digite sua senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
           disabled={isLoading}
         />
 
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Carregando..." : "Entrar"}
+          {isLoading ? "Entrando..." : "Entrar"}
         </Button>
       </Form>
 
-      {mensagem && <p>{mensagem}</p>}
+      {mensagem && (
+        <p style={{ 
+          color: mensagem.includes('❌') ? 'red' : 'green',
+          marginTop: '10px'
+        }}>
+          {mensagem}
+        </p>
+      )}
     </FormularioContainer>
   );
 }

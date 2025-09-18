@@ -6,6 +6,7 @@ import { IoSchoolOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { IoTimeOutline } from "react-icons/io5";
 import { SiGoogleclassroom } from "react-icons/si";
+import { RiUserSettingsLine } from "react-icons/ri";
 import {
   HeaderContainer,
   LeftMenu,
@@ -40,6 +41,7 @@ function Header() {
               <DropdownItem onClick={() => navigate("/listEscolas")}><IoSchoolOutline style={{ fontSize: "1.5rem" }} /> Escolas</DropdownItem>
               <DropdownItem onClick={() => navigate("/listHorarios")}><IoTimeOutline style={{ fontSize: "1.5rem" }} /> Horários</DropdownItem>
               <DropdownItem onClick={() => navigate("/listTurmas")}><SiGoogleclassroom style={{ fontSize: "1.5rem" }} /> Turmas</DropdownItem>
+              <DropdownItem onClick={() => navigate("/gerenciarUsuarios")}><RiUserSettingsLine style={{ fontSize: "1.5rem" }} /> Usuarios</DropdownItem>
             </DropdownMenu>
           )}
         </Menu>
@@ -50,7 +52,7 @@ function Header() {
           onMouseLeave={() => setCadastroOpen(false)}
           style={{ position: "relative" }}
         >Cadastro <IoIosArrowDown />
-        {cadastroOpen && (
+          {cadastroOpen && (
             <CadastroMenu>
               <CadastroItem onClick={() => navigate("/listAlunos")}><CiUser style={{ fontSize: "1.5rem" }} /> Alunos</CadastroItem>
               <CadastroItem onClick={() => navigate("/listColaboradores")}><CiUser style={{ fontSize: "1.5rem" }} /> Colaboradores</CadastroItem>

@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Formulario from "./Formulario/formulario";
 import Home from "./Screens/Home/home";
+import Professor from "./ProfessorScreens/dashboard";
 //Aluno
 import ListAluno from "./Screens/Alunos/listAluno";
 import AddAluno from "./Screens/Alunos/addAluno";
@@ -28,6 +29,8 @@ import TurmasHoje from "./Screens/TurmasHoje/turmasHoje"
 import ListFornecedor from "./Screens/Fornecedores/listFornecedor";
 import AddFornecedor from "./Screens/Fornecedores/addFornecedores";
 import UpdateFornecedor from "./Screens/Fornecedores/updateFornecedor"
+// Gerenciar Usuários
+import GerenciarUsuarios from "./Screens/GerenciarUsuarios/gerenciarUsuarios";
 
 function App() {
   return (
@@ -35,6 +38,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Formulario />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/professor" element={<Professor />} />
         {/* Aluno */}
         <Route path="/listAlunos" element={<ListAluno />} />
         <Route path="/addAlunos" element={<AddAluno />} />
@@ -61,6 +65,8 @@ function App() {
         <Route path="/listFornecedores" element={<ListFornecedor />} />
         <Route path="/addFornecedores" element={<AddFornecedor />} />
         <Route path="/updateFornecedores/:id" element={<UpdateFornecedor />} />
+        {/* Fornecedor */}
+        <Route path="/gerenciarUsuarios" element={<GerenciarUsuarios />} />
       </Routes>
     </BrowserRouter>
   );

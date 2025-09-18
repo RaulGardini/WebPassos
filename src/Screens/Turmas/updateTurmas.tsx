@@ -370,7 +370,7 @@ function UpdateTurma() {
 
                     <DisplayFlex>
                         <BackButton type="button" onClick={handleBack} disabled={loading}>
-                            Voltar
+                            Cancelar
                         </BackButton>
 
                         <Button
@@ -391,7 +391,7 @@ function UpdateTurma() {
                                 opacity: !hasChanges() ? 0.6 : 1
                             }}
                         >
-                            {loading ? "Salvando..." : "Salvar Alterações"}
+                            {loading ? "Salvando..." : "Salvar"}
                         </Button>
                     </DisplayFlex>
                 </Form>

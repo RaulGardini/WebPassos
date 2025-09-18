@@ -348,9 +348,6 @@ function UpdateAlunos() {
                             onChange={handleChange}
                         />
                         <DisplayFlex>
-                            <Button type="submit" disabled={loadingUpdate}>
-                                {loadingUpdate ? "Atualizando..." : "Atualizar"}
-                            </Button>
                             <BackButton 
                                 type="button" 
                                 onClick={handleCancel}
@@ -358,6 +355,9 @@ function UpdateAlunos() {
                             >
                                 Cancelar
                             </BackButton>
+                            <Button type="submit" disabled={loadingUpdate}>
+                                {loadingUpdate ? "Atualizando..." : "Atualizar"}
+                            </Button>
                         </DisplayFlex>
                         {message && <Message success={success}>{message}</Message>}
                     </Form>
