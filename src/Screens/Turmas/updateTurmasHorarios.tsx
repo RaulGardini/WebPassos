@@ -10,7 +10,6 @@ import {
 import type { Horario } from '../../Models/horario';
 import type { Turma } from '../../Models/turma';
 import {
-    Container,
     Title,
     DisplayFlex,
     Button,
@@ -24,6 +23,7 @@ import {
     HorariosList,
     HorarioItem
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 function UpdateTurmasHorarios() {
     const navigate = useNavigate();

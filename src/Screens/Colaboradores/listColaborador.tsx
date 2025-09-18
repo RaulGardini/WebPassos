@@ -10,7 +10,6 @@ import { getCargos } from "../../services/cargoService";
 import { getColaboradores, deleteColaborador } from "../../services/colaboradorService";
 import type { Cargo } from '../../Models/cargo';
 import {
-    Container,
     Title,
     DisplayFlex,
     TopLine,
@@ -39,6 +38,7 @@ import {
     InfoModal
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { Container } from '../../ui/Container/style';
 
 function ListColaboradores() {
     const [colaboradores, setColaboradores] = useState<Colaborador[]>([]);

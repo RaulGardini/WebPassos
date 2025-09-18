@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { UpdateFornecedorData } from "../../Models/fornecedor";
 import { getFornecedorById, updateFornecedor } from "../../services/fornecedorService";
 import {
-    Container,
     Title,
     DisplayFlex,
     Form,
@@ -15,6 +14,7 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 function UpdateFornecedores() {
     const navigate = useNavigate();

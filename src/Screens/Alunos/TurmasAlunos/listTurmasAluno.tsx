@@ -13,7 +13,6 @@ import {
 import { getAlunoById } from "../../../services/alunoService";
 import type { Aluno, Turma, Matricula } from "../../../Models/aluno";
 import {
-    Container,
     Title,
     DisplayFlex,
     TopLine,
@@ -33,6 +32,7 @@ import {
     StatusBadge,
     MatriculaInfo
 } from "../style";
+import { Container } from '../../../ui/Container/style';
 
 type TabType = 'disponiveis' | 'matriculadas';
 

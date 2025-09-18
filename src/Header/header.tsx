@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { IoTimeOutline } from "react-icons/io5";
 import { SiGoogleclassroom } from "react-icons/si";
 import { RiUserSettingsLine } from "react-icons/ri";
+import { BiLogOut } from "react-icons/bi";
 import {
   HeaderContainer,
   LeftMenu,
@@ -63,8 +64,11 @@ function Header() {
       </LeftMenu>
       <RightMenu>
         <Logout onClick={() => navigate("/")}>
-          logout<IoIosArrowBack />
+          <BiLogOut />
         </Logout>
+        <div style={{position: 'absolute', right: '1rem', fontSize: '0.8rem', color: '#ffffffaa', fontFamily: 'arial'}}>
+          <p>v 1.0.0</p>
+        </div>
       </RightMenu>
     </HeaderContainer>
   );

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { createAluno } from "../../services/alunoService";
 import type { CreateAlunoData } from "../../Models/aluno";
 import {
-    Container,
     Title,
     DisplayFlex,
     Form,
@@ -16,6 +15,7 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 function AddAlunos() {
     const navigate = useNavigate();

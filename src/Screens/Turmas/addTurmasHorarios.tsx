@@ -5,7 +5,6 @@ import { getHorariosDisponiveisParaTurma  } from "../../services/horarioService"
 import { addMultipleHorariosToTurma } from "../../services/turmaHorarioService";
 import type { Horario } from '../../Models/horario';
 import {
-    Container,
     Title,
     DisplayFlex,
     Button,
@@ -14,6 +13,7 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 // Styled components específicos para esta tela
 import styled from "styled-components";

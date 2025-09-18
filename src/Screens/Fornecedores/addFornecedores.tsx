@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import type { CreateFornecedorData } from "../../Models/fornecedor";
 import { createFornecedor } from "../../services/fornecedorService";
 import {
-    Container,
     Title,
     DisplayFlex,
     Form,
@@ -15,6 +14,7 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 function AddFornecedores() {
     const navigate = useNavigate();
@@ -82,7 +82,7 @@ function AddFornecedores() {
 
             console.log("Enviando dados:", dataToSend);
 
-            const response = await createFornecedor(dataToSend);
+            await createFornecedor(dataToSend);
             
             setSuccess(true);
             setMessage("Fornecedor cadastrado com sucesso!");

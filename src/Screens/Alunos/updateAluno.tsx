@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getAlunoById, updateAluno } from "../../services/alunoService";
 import type { UpdateAlunoData } from "../../Models/aluno";
 import {
-    Container,
     Title,
     DisplayFlex,
     Form,
@@ -16,6 +15,7 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 function UpdateAlunos() {
     const navigate = useNavigate();

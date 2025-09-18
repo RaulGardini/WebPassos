@@ -7,7 +7,6 @@ import { MdEditSquare, MdDelete } from "react-icons/md";
 import type { Usuario } from '../../Models/usuario';
 import type { Colaborador } from '../../Models/colaborador';
 import {
-    Container,
     Title,
     DisplayFlex,
     TopLine,
@@ -39,6 +38,7 @@ import {
     TipoBadge
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { Container } from '../../ui/Container/style';
 
 const GerenciarUsuarios = () => {
     // Estados principais

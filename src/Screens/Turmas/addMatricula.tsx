@@ -13,7 +13,6 @@ import {
 import type { Aluno } from "../../Models/aluno";
 import type { Matricula, TurmaInfo, MatriculaFilters } from "../../Models/matricula";
 import {
-    Container,
     Title,
     DisplayFlex,
     TopLine,
@@ -41,6 +40,7 @@ import {
     TableHeader,
     TableHeaderCell
 } from "../Turmas/style";
+import { Container } from '../../ui/Container/style';
 
 function ManageMatriculas() {
     const { turmaId } = useParams<{ turmaId: string }>();

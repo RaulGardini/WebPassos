@@ -10,7 +10,6 @@ import type { Sala } from '../../Models/sala';
 import type { Modalidade } from '../../Models/modalidade';
 import type { Colaborador } from '../../Models/colaborador';
 import {
-    Container,
     Title,
     DisplayFlex,
     Form,
@@ -21,6 +20,7 @@ import {
     TopLine,
     BackButton,
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 function AddTurmas() {
     const navigate = useNavigate();

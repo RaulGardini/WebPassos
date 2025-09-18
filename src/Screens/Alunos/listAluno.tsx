@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaGraduationCap } from "react-icons/fa";
 import { getAlunos, deleteAluno, type PaginatedResponse, type PaginationParams } from "../../services/alunoService";
 import {
-    Container,
     Title,
     DisplayFlex,
     TopLine,
@@ -40,6 +39,7 @@ import {
     PaginationButton
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { Container } from '../../ui/Container/style';
 
 interface PaginationState {
     currentPage: number;

@@ -7,7 +7,6 @@ import { getInfoEscola } from "../../services/homeService";
 import type { EscolaInfoData } from '../../Models/home';
 import { getAulasHoje } from "../../services/turmasHojeService";
 import {
-    Container,
     Title,
     TopLine,
     DisplayFlex,
@@ -23,6 +22,7 @@ import {
     LoadingState,
     ErrorState
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 interface AulasHojeData {
   total_aulas: number;
