@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoIosMenu } from "react-icons/io";
-import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import { IoSchoolOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";

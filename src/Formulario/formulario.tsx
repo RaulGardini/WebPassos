@@ -70,7 +70,6 @@ function Formulario() {
         <input
           type="text"
           id="usuario"
-          placeholder="Digite seu usuário"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
           disabled={isLoading}
@@ -80,7 +79,6 @@ function Formulario() {
         <input
           type="password"
           id="senha"
-          placeholder="Digite sua senha"
           value={senha}
           onChange={(e) => setSenha(e.target.value)}
           disabled={isLoading}
@@ -92,9 +90,12 @@ function Formulario() {
       </Form>
 
       {mensagem && (
-        <p style={{ 
+        <p style={{
           color: mensagem.includes('❌') ? 'red' : 'green',
-          marginTop: '10px'
+          marginTop: '10px',
+          textAlign: 'center',
+          fontSize: 'clamp(0.9rem, 2vw, 1.1rem)',
+          maxWidth: '90%'
         }}>
           {mensagem}
         </p>
