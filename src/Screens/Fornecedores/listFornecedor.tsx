@@ -7,7 +7,6 @@ import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { getFornecedores, deleteFornecedor } from "../../services/fornecedorService";
 import {
-    Container,
     Title,
     DisplayFlex,
     TopLine,
@@ -34,6 +33,7 @@ import {
     EditButton,
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { Container } from '../../ui/Container/style';
 
 function ListFornecedores() {
     const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);

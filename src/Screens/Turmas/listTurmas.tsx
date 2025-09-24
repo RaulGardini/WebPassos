@@ -16,9 +16,7 @@ import type { Modalidade } from '../../Models/modalidade';
 import type { Colaborador } from '../../Models/colaborador';
 import type { TurmaInfo } from "../../Models/matricula";
 import { getTurmaInfo } from "../../services/matriculaService";
-
 import {
-    Container,
     Title,
     DisplayFlex,
     TopLine,
@@ -47,6 +45,7 @@ import {
     InfoModal
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { Container } from '../../ui/Container/style';
 
 function ListTurmas() {
     const [turmas, setTurmas] = useState<Turma[]>([]);

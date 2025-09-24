@@ -2,15 +2,15 @@ import styled from "styled-components";
 
 export const HeaderContainer = styled.header`
   width: 100%;
-  height: 8vh;
+  height: 12vh;
   background-color: #333;
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
-export const LeftMenu = styled.div`
-  width: 35%;
+export const Menu = styled.div`
+  width: 100%;
   height: 10vh;
   display: flex;
   align-items: center;
@@ -19,17 +19,7 @@ export const LeftMenu = styled.div`
   font-family: arial;
 `;
 
-export const RightMenu = styled.div`
-  width: 10%;
-  height: 10vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-`;
-
-export const Menu = styled.div`
-  width: 20%;
+export const Options = styled.div`
   height: 10vh;
   display: flex;
   align-items: center;

@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getCargos } from "../../services/cargoService";
 import type { Cargo } from '../../Models/cargo';
 import {
-    Container,
     Title,
     DisplayFlex,
     Form,
@@ -16,6 +15,7 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { Container } from '../../ui/Container/style';
 
 function UpdateColaborador() {
     const navigate = useNavigate();

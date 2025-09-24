@@ -1,11 +1,5 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-  margin-right: 2rem;
-  margin-left: 2rem;
-//   background-color: #d6d6d6ff;
-`;
-
 export const Title = styled.h1`
   font-family: 'Arial', sans-serif;
   display: flex;

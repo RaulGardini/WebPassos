@@ -11,7 +11,6 @@ import type { Cargo } from "../../Models/cargo";
 import type { Sala } from "../../Models/sala";
 import type { Modalidade } from "../../Models/modalidade";
 import {
-    Container,
     Title,
     DisplayFlex,
     HorizontalLine,
@@ -36,6 +35,7 @@ import {
     ActionButton
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { Container } from '../../ui/Container/style';
 
 function UpdateColaborador() {
     // Estados para Cargos

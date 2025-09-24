@@ -4,7 +4,6 @@ import { IoAdd } from "react-icons/io5";
 import { getHorarios, createHorario, deleteHorario } from "../../services/horarioService";
 import type { Horario } from "../../Models/horario";
 import {
-    Container,
     DisplayFlex,
     Title,
     TopLine,
@@ -14,6 +13,7 @@ import {
     HorarioBox
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { Container } from '../../ui/Container/style';
 
 // Função para converter "HH:MM - HH:MM" em minutos
 const parseHora = (horario: string) => {
