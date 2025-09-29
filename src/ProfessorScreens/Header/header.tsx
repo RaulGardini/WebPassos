@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { IoIosMenu } from "react-icons/io";
-import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
-import { CiUser } from "react-icons/ci";
-import { IoSchoolOutline } from "react-icons/io5";
+import { MdCalendarMonth } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
+import { gerarChamadasMes } from "../../services/chamadaService";
 import {
     HeaderContainer,
     Menu,
@@ -13,28 +12,57 @@ import {
     Options,
     DropdownMenu,
     DropdownItem,
-    SubButton,
-    CadastroMenu,
-    CadastroItem,
 } from "./style";
 
 function Header() {
-
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+
+    const handleToggleMenu = () => {
+        setDropdownOpen((prev) => !prev); // abre/fecha no clique do botão
+    };
+
+    // Detecta clique fora
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const handleGerarChamadas = async () => {
+        try {
+            const colaboradorId = 14; // pegar do usuário logado
+            const response = await gerarChamadasMes(colaboradorId);
+            alert(response.message);
+        } catch (error) {
+            alert(
+                "Erro ao gerar chamadas: " +
+                (error instanceof Error ? error.message : "Erro desconhecido")
+            );
+        }
+    };
 
     return (
         <HeaderContainer>
             <Menu>
-                <Options
-                    onMouseEnter={() => setDropdownOpen(true)}
-                    onMouseLeave={() => setDropdownOpen(false)}
-                    style={{ position: "relative" }}
-                >
-                    <IoIosMenu />
+                <Options ref={menuRef} style={{ position: "relative" }}>
+                    <IoIosMenu onClick={handleToggleMenu} />
                     {dropdownOpen && (
                         <DropdownMenu>
-                            <DropdownItem onClick={() => navigate("/listEscolas")}><IoSchoolOutline style={{ fontSize: "1.5rem" }} /> Escolas</DropdownItem>
+                            <DropdownItem onClick={() => navigate("/listChamadaProfessor")}>
+                                <MdCalendarMonth style={{ fontSize: "1.5rem" }} /> Chamadas do mês
+                            </DropdownItem>
+                            <DropdownItem onClick={handleGerarChamadas}>
+                                <MdCalendarMonth style={{ fontSize: "1.5rem" }} /> Gerar Chamadas
+                                do Mês
+                            </DropdownItem>
                         </DropdownMenu>
                     )}
                 </Options>

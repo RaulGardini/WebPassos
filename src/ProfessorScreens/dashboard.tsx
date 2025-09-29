@@ -137,7 +137,7 @@ const Professor: React.FC = () => {
           >
             <ChamadaTitle>{turma.nome_turma}</ChamadaTitle>
             <ChamadaInfo>
-              {turma.horarios.map((horario, index) => (
+              {turma.horarios.map((horario) => (
                 <InfoText key={horario.horario_id}>
                   {horario.horario}
                 </InfoText>

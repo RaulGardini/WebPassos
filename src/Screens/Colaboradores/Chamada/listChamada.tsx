@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../../Header/header";
 import { FiCalendar, FiArrowLeft } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
-import { MdEditSquare, MdDelete, MdBackHand } from "react-icons/md";
+import { MdBackHand } from "react-icons/md";
+import { buscarChamadasPorMes } from '../../../services/chamadaService';
 import {
     Title,
     DisplayFlex,
@@ -51,27 +52,21 @@ function ListChamadas() {
     const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
 
     const fetchChamadasPorMes = async (mes: number) => {
-        if (!id) return;
+    if (!id) return;
 
-        try {
-            setLoading(true);
-            setError(null);
+    try {
+        setLoading(true);
+        setError(null);
 
-            const response = await fetch(`http://localhost:3000/chamadas/colaborador/${id}/mes?mes=${mes}`);
-
-            if (!response.ok) {
-                throw new Error('Erro ao buscar chamadas');
-            }
-
-            const data = await response.json();
-            setChamadas(data.chamadas || []);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Erro desconhecido');
-            setChamadas([]);
-        } finally {
-            setLoading(false);
-        }
-    };
+        const data = await buscarChamadasPorMes(Number(id), mes);
+        setChamadas(data.chamadas || []);
+    } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erro desconhecido');
+        setChamadas([]);
+    } finally {
+        setLoading(false);
+    }
+};
 
     const handleMonthSelect = (mes: number) => {
         setSelectedMonth(mes);

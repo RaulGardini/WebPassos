@@ -2,7 +2,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Formulario from "./Formulario/formulario";
 import Home from "./Screens/Home/home";
+// Professor
 import Professor from "./ProfessorScreens/dashboard";
+import ListChamadaProfessor from "./ProfessorScreens/Chamadas/listChamada"
 //Aluno
 import ListAluno from "./Screens/Alunos/listAluno";
 import AddAluno from "./Screens/Alunos/addAluno";
@@ -39,7 +41,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Formulario />} />
         <Route path="/home" element={<Home />} />
+        {/* Professor */}
         <Route path="/professor" element={<Professor />} />
+        <Route path="/listChamadaProfessor" element={<ListChamadaProfessor />} />
         {/* Aluno */}
         <Route path="/listAlunos" element={<ListAluno />} />
         <Route path="/addAlunos" element={<AddAluno />} />
