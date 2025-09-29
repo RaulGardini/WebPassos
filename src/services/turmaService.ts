@@ -69,3 +69,27 @@ export const getTurmaStats = async (id: number): Promise<{
   const response = await axios.get(`${API_URL}/${id}/stats`);
   return response.data;
 };
+
+export const getTurmasHojeColaborador = async (colaboradorId: number): Promise<{
+  colaborador_id: number;
+  data: string;
+  dia_semana: string;
+  total_aulas: number;
+  aulas: Array<{
+    turma_id: number;
+    nome_turma: string;
+    sala_id: number;
+    modalidade_id: number;
+    professor1_id: number;
+    professor2_id: number;
+    capacidade: number;
+    horarios: Array<{
+      horario_id: number;
+      dia_semana: string;
+      horario: string;
+    }>;
+  }>;
+}> => {
+  const response = await axios.get(`${API_URL}/colaborador/${colaboradorId}/hoje`);
+  return response.data;
+};

@@ -14,3 +14,17 @@ export const gerarChamadasDoMes = async (colaboradorId: number): Promise<{ messa
   const response = await axios.post(`${API_URL}/gerar/${colaboradorId}`);
   return response.data;
 };
+
+export const criarChamadaHoje = async (turmaId: number): Promise<{
+  message: string;
+  chamada: {
+    chamada_id: number;
+    turma_id: number;
+    colaborador_id: number;
+    data_aula: string;
+  };
+  data_aula: string;
+}> => {
+  const response = await axios.post(`${API_URL}/turma/${turmaId}/hoje`);
+  return response.data;
+};

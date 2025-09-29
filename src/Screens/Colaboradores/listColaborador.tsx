@@ -3,7 +3,7 @@ import Header from "../../Header/header";
 import type { Colaborador, ColaboradorFilters } from "../../Models/colaborador";
 import { IoAdd } from "react-icons/io5";
 import { FiSearch, FiX, FiUser, FiMail, FiUsers, FiHash } from "react-icons/fi";
-import { MdEditSquare, MdDelete } from "react-icons/md";
+import { MdEditSquare, MdDelete, MdBackHand } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaVenusMars } from "react-icons/fa";
 import { getCargos } from "../../services/cargoService";
@@ -320,6 +320,14 @@ function ListColaboradores() {
                                         <TableCell>{cargos.find(cargo => cargo.cargo_id === colaborador.cargo_id)?.nome_cargo}</TableCell>
                                         <TableCell textAlign="center">
                                             <ActionButtons>
+                                                {cargos.find(cargo => cargo.cargo_id === colaborador.cargo_id)?.nome_cargo?.includes("Professor") && (
+                                                    <EditButton
+                                                        onClick={() => navigate(`/listChamada/${colaborador.colaborador_id}`)}
+                                                        title="Ver chamadas do professor"
+                                                    >
+                                                        <MdBackHand />
+                                                    </EditButton>
+                                                )}
                                                 <EditButton
                                                     onClick={() => navigate(`/updateColaborador/${colaborador.colaborador_id}`)}
                                                 >

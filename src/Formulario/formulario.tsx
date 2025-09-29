@@ -5,7 +5,8 @@ import {
   Form,
   FormularioContainer,
   Title,
-  Button
+  Button,
+  LoadingState
 } from './style';
 
 function Formulario() {
@@ -85,7 +86,7 @@ function Formulario() {
         />
 
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Entrando..." : "Entrar"}
+          {isLoading ? <LoadingState />: 'Entrar'}
         </Button>
       </Form>
 

@@ -152,3 +152,27 @@ export const Button = styled.button`
     padding: 5%;
   }
 `;
+
+export const LoadingState = styled.div`
+    text-align: center;
+    padding: 0.3rem;
+    color: #666;
+    font-size: 1.1rem;
+
+    &::before {
+        content: '';
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        //border: 2px solid #f3f3f3;
+        border-top: 2px solid #ffffffff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`;
