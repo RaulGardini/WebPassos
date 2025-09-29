@@ -10,7 +10,6 @@ import {
     Title,
     DisplayFlex,
     TopLine,
-    MidLine,
     FilterGrid,
     FilterGroup,
     FilterLabel,
@@ -220,8 +219,6 @@ const GerenciarUsuarios = () => {
                 >
                     <IoAdd />Novo
                 </AddButton>
-                
-                <MidLine />
 
                 {mensagem && (
                     <Message tipo={tipoMensagem}>

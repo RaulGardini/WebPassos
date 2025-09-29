@@ -1,9 +1,7 @@
-
-
 export interface Usuario {
   id: number;
   colaborador_id?: number;
-  nome?: string;
+  nome: string;
   login: string;
-  tipo: string;
+  tipo: 'Professor' | 'Admin';
 }
