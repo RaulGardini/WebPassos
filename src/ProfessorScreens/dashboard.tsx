@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../ProfessorScreens/Header/header';
 import { getTurmasHojeColaborador } from '../services/turmaService';
 import { criarChamadaHoje } from '../services/chamadaService';
+import { criarPresencas } from '../services/presencaService';
+import { buscarChamadasDoDia } from '../services/chamadaService';
 import type { Usuario } from '../Models/chamada';
 import {
   Container,
@@ -19,6 +21,7 @@ import {
   EmptyStateText,
   LoadingContainer
 } from './style';
+import { LoadingState } from '../ui/Loading/style'
 
 interface TurmaHoje {
   turma_id: number;
@@ -94,31 +97,62 @@ const Professor: React.FC = () => {
   };
 
   const handleTurmaClick = async (turmaId: number) => {
-    if (criandoChamada === turmaId) return; // Evitar cliques duplos
+    if (criandoChamada === turmaId) return;
 
     try {
       setCriandoChamada(turmaId);
       
-      const resultado = await criarChamadaHoje(turmaId);
+      let chamadaId: number;
       
-      // Mostrar mensagem de sucesso
-      alert(`✅ ${resultado.message}\nChamada criada para ${resultado.data_aula}`);
+      try {
+        // 1. Tentar criar a chamada
+        const resultadoChamada = await criarChamadaHoje(turmaId);
+        console.log('Chamada criada:', resultadoChamada);
+        chamadaId = resultadoChamada.chamada.chamada_id;
+        
+        // 2. Criar as presenças automaticamente (só se a chamada foi criada agora)
+        try {
+          const resultadoPresencas = await criarPresencas(chamadaId);
+          console.log('Presenças criadas:', resultadoPresencas);
+        } catch (presencaError: any) {
+          // Se já existem presenças, apenas continuar
+          console.log('Presenças já existem ou erro ao criar:', presencaError);
+        }
+        
+      } catch (chamadaError: any) {
+        // Se a chamada já existe, pegar o ID dela da resposta ou buscar
+        if (chamadaError.response?.data?.error?.includes('Já existe uma chamada')) {
+          // Buscar a chamada existente do dia
+          if (!usuario?.colaborador_id) return;
+          
+          const chamadasDoDia = await buscarChamadasDoDia(usuario.colaborador_id);
+          const chamadaExistente = chamadasDoDia.chamadas?.find(
+            (c: any) => c.turma_id === turmaId
+          );
+          
+          if (chamadaExistente) {
+            chamadaId = chamadaExistente.chamada_id;
+            console.log('Usando chamada existente:', chamadaId);
+          } else {
+            throw new Error('Não foi possível encontrar a chamada');
+          }
+        } else {
+          throw chamadaError;
+        }
+      }
       
-      console.log('Chamada criada:', resultado);
-      
-      // Aqui você pode implementar navegação para tela de chamada se necessário
-      // navigate(`/chamada/${resultado.chamada.chamada_id}`);
+      // 3. Navegar para a tela de presenças
+      navigate(`/presencas/${chamadaId}`);
       
     } catch (error: any) {
-      console.error('Erro ao criar chamada:', error);
+      console.error('Erro ao processar chamada:', error);
       
-      // Mostrar mensagem de erro mais amigável
       if (error.response?.data?.error) {
-        alert(`❌ Erro: ${error.response.data.error}`);
+        alert(`Erro: ${error.response.data.error}`);
       } else if (error.response?.data?.message) {
-        alert(`❌ ${error.response.data.message}`);
+        alert(`${error.response.data.message}`);
       } else {
-        alert('❌ Erro ao criar chamada. Tente novamente.');
+        alert('Erro ao processar chamada. Tente novamente.');
       }
     } finally {
       setCriandoChamada(null);
@@ -133,9 +167,19 @@ const Professor: React.FC = () => {
         {turmasHoje.aulas.map((turma) => (
           <ChamadaCard
             key={turma.turma_id}
-            onClick={() => handleTurmaClick(turma.turma_id)}
+            onClick={() => {
+              if (criandoChamada !== turma.turma_id) {
+                handleTurmaClick(turma.turma_id);
+              }
+            }}
+            style={criandoChamada === turma.turma_id ? { pointerEvents: 'none', opacity: 0.6 } : {}}
           >
-            <ChamadaTitle>{turma.nome_turma}</ChamadaTitle>
+            <ChamadaTitle>
+              {criandoChamada === turma.turma_id 
+                ? 'Criando chamada...' 
+                : turma.nome_turma
+              }
+            </ChamadaTitle>
             <ChamadaInfo>
               {turma.horarios.map((horario) => (
                 <InfoText key={horario.horario_id}>
@@ -176,7 +220,7 @@ const Professor: React.FC = () => {
   if (!usuario) {
     return (
       <LoadingContainer>
-        <p>Carregando...</p>
+        <LoadingState />
       </LoadingContainer>
     );
   }
@@ -197,7 +241,7 @@ const Professor: React.FC = () => {
 
         {loading ? (
           <LoadingContainer>
-            <p>Carregando turmas de hoje...</p>
+            <LoadingState />
           </LoadingContainer>
         ) : (
           renderContent()

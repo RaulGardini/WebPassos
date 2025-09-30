@@ -4,6 +4,7 @@ import { FiCalendar } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
 import { MdBackHand } from "react-icons/md";
 import { buscarChamadasPorMes } from '../../services/chamadaService';
+import { criarPresencas } from '../../services/presencaService';
 import Header from "../Header/header";
 import {
     Container,
@@ -13,7 +14,6 @@ import {
     MonthCard,
     MonthTitle,
     TableContainer,
-    LoadingState,
     ErrorState,
     EmptyState,
     ChamadaCard,
@@ -23,6 +23,7 @@ import {
     ActionButton,
     BackButton
 } from "./style";
+import { LoadingState } from '../../ui/Loading/style'
 
 interface Chamada {
     chamada_id: number;
@@ -45,6 +46,7 @@ function ListChamada() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+    const [criandoPresenca, setCriandoPresenca] = useState<number | null>(null);
 
     const fetchChamadasPorMes = async (mes: number) => {
         try {
@@ -78,9 +80,30 @@ function ListChamada() {
         return `${day}/${month}/${year}`;
     };
 
-    const handleVerPresenca = (chamadaId: number) => {
-        // Navegar para tela de presença
-        navigate(`/presenca/${chamadaId}`);
+    const handleVerPresenca = async (chamadaId: number) => {
+        if (criandoPresenca === chamadaId) return;
+
+        try {
+            setCriandoPresenca(chamadaId);
+
+            // Tentar criar as presenças (se já existirem, vai para o catch)
+            try {
+                const resultadoPresencas = await criarPresencas(chamadaId);
+                console.log('Presenças criadas:', resultadoPresencas);
+            } catch (presencaError: any) {
+                // Se já existem presenças, apenas continuar para navegação
+                console.log('Presenças já existem ou erro:', presencaError);
+            }
+
+            // Navegar para tela de presença
+            navigate(`/presencas/${chamadaId}`);
+
+        } catch (error: any) {
+            console.error('Erro ao processar presença:', error);
+            alert('Erro ao acessar presenças. Tente novamente.');
+        } finally {
+            setCriandoPresenca(null);
+        }
     };
 
     const currentYear = new Date().getFullYear();
@@ -91,6 +114,12 @@ function ListChamada() {
         <>
             <Header />
             <Container>
+                {selectedMonth && (
+                    <BackButton onClick={handleBackToMonths}>
+                        <IoArrowBack />
+                        Voltar aos Meses
+                    </BackButton>
+                )}
                 <Title>
                     {selectedMonth
                         ? `${MESES.find(m => m.numero === selectedMonth)?.nome} ${currentYear}`
@@ -98,13 +127,6 @@ function ListChamada() {
                     }
                 </Title>
                 <TopLine />
-
-                {selectedMonth && (
-                    <BackButton onClick={handleBackToMonths}>
-                        <IoArrowBack />
-                        Voltar aos Meses
-                    </BackButton>
-                )}
 
                 {!selectedMonth && (
                     <MonthsContainer>
@@ -129,9 +151,7 @@ function ListChamada() {
                 {selectedMonth && (
                     <TableContainer>
                         {loading && (
-                            <LoadingState>
-                                Carregando chamadas...
-                            </LoadingState>
+                            <LoadingState />
                         )}
 
                         {error && (
@@ -163,9 +183,13 @@ function ListChamada() {
                                         <ActionButton 
                                             onClick={() => handleVerPresenca(chamada.chamada_id)}
                                             title="Ver Presença"
+                                            disabled={criandoPresenca === chamada.chamada_id}
                                         >
                                             <MdBackHand size={20} />
-                                            Ver Presença
+                                            {criandoPresenca === chamada.chamada_id 
+                                                ? 'Carregando...' 
+                                                : 'Ver Presença'
+                                            }
                                         </ActionButton>
                                     </ChamadaCard>
                                 ))}

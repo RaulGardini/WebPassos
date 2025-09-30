@@ -34,10 +34,12 @@ import {
     ButtonsModal,
     ActionButton
 } from "./style";
+import { LoadingState } from '../../ui/Loading/style'
 import { AddButton } from '../../ui/AddButton/style';
 import { Container } from '../../ui/Container/style';
 
 function UpdateColaborador() {
+    const [loading, setLoading] = useState(true);
     // Estados para Cargos
     const [cargos, setCargos] = useState<Cargo[]>([]);
     const [filtro, setFiltro] = useState("");
@@ -71,8 +73,13 @@ function UpdateColaborador() {
 
     // Funções para Cargos
     const carregarCargos = async () => {
-        const data = await getCargos();
-        setCargos(data);
+        try {
+            const data = await getCargos();
+            setCargos(data);
+            setLoading(true);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleBuscarCargo = async () => {
@@ -118,8 +125,13 @@ function UpdateColaborador() {
 
     // Funções para Salas
     const carregarSalas = async () => {
-        const data = await getSalas();
+        try {
+            const data = await getSalas();
         setSalas(data);
+            setLoading(true);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleBuscarSala = async () => {
@@ -169,8 +181,13 @@ function UpdateColaborador() {
 
     // Funções para Modalidades
     const carregarModalidades = async () => {
-        const data = await getModalidades();
+        try {
+            const data = await getModalidades();
         setModalidades(data);
+            setLoading(true);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleBuscarModalidade = async () => {
@@ -306,6 +323,10 @@ function UpdateColaborador() {
                                 </ModalContainer>
                             </Overlay>
                         )}
+                        {loading && (
+                            <LoadingState>
+                            </LoadingState>
+                        )}
                     </ContainerSala>
 
                     <VerticalLine />
@@ -379,6 +400,10 @@ function UpdateColaborador() {
                                 </ModalContainer>
                             </Overlay>
                         )}
+                        {loading && (
+                            <LoadingState>
+                            </LoadingState>
+                        )}
                     </ContainerModalidade>
 
                     <VerticalLine />
@@ -451,6 +476,10 @@ function UpdateColaborador() {
                                     </ButtonsModal>
                                 </ModalContainer>
                             </Overlay>
+                        )}
+                        {loading && (
+                            <LoadingState>
+                            </LoadingState>
                         )}
                     </ContainerCargo>
                 </DisplayFlex>

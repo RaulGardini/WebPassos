@@ -25,10 +25,10 @@ import {
     AulaInfo,
     AulaInfoItem,
     ActionButton,
-    LoadingState,
     ErrorState,
     EmptyState,
 } from "./style";
+import { LoadingState } from '../../ui/Loading/style';
 import { Container } from '../../ui/Container/style';
 
 interface AulaHoje {
@@ -161,7 +161,6 @@ function TurmasHoje() {
 
                 {loading && (
                     <LoadingState>
-                        Carregando aulas de hoje...
                     </LoadingState>
                 )}
 

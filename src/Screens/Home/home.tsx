@@ -19,9 +19,9 @@ import {
     StatusBadge,
     ProgressBar,
     ProgressFill,
-    LoadingState,
     ErrorState
 } from "./style";
+import { LoadingState } from '../../ui/Loading/style';
 import { Container } from '../../ui/Container/style';
 
 interface AulasHojeData {

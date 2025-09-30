@@ -5,6 +5,7 @@ import Home from "./Screens/Home/home";
 // Professor
 import Professor from "./ProfessorScreens/dashboard";
 import ListChamadaProfessor from "./ProfessorScreens/Chamadas/listChamada"
+import Presenca from "./ProfessorScreens/Presencas/presenca"
 //Aluno
 import ListAluno from "./Screens/Alunos/listAluno";
 import AddAluno from "./Screens/Alunos/addAluno";
@@ -44,6 +45,7 @@ function App() {
         {/* Professor */}
         <Route path="/professor" element={<Professor />} />
         <Route path="/listChamadaProfessor" element={<ListChamadaProfessor />} />
+        <Route path="/presencas/:chamada_id" element={<Presenca />} />
         {/* Aluno */}
         <Route path="/listAlunos" element={<ListAluno />} />
         <Route path="/addAlunos" element={<AddAluno />} />
