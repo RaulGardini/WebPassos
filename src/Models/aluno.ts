@@ -16,8 +16,8 @@ export interface Aluno {
 // Interface para dados de criação de aluno
 export interface CreateAlunoData {
     nome: string;
-    email: string;
-    cpf: string;
+    email?: string;
+    cpf?: string;
     telefone?: string;
     sexo?: "M" | "F";
     endereco?: string;

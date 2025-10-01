@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Modalidade } from "../Models/modalidade";
+import type { Modalidade, CreateModalidadeData, UpdateModalidadeData } from "../Models/modalidade";
 
 const API_URL = "http://localhost:3000/modalidades";
 
@@ -11,7 +11,6 @@ export const getModalidades = async (nome_modalidade?: string): Promise<Modalida
   return response.data;
 };
 
-
 // GET modalidade by id
 export const getModalidadeById = async (id: number): Promise<Modalidade> => {
   const response = await axios.get(`${API_URL}/${id}`);
@@ -19,13 +18,13 @@ export const getModalidadeById = async (id: number): Promise<Modalidade> => {
 };
 
 // CREATE modalidade
-export const createModalidade = async (data: Omit<Modalidade, "modalidade_id">): Promise<Modalidade> => {
+export const createModalidade = async (data: CreateModalidadeData): Promise<Modalidade> => {
   const response = await axios.post(API_URL, data);
   return response.data;
 };
 
 // UPDATE modalidade
-export const updateModalidade = async (id: number, data: Partial<Modalidade>): Promise<Modalidade> => {
+export const updateModalidade = async (id: number, data: UpdateModalidadeData): Promise<Modalidade> => {
   const response = await axios.put(`${API_URL}/${id}`, data);
   return response.data;
 };

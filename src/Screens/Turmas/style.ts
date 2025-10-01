@@ -212,6 +212,7 @@ export const Form = styled.form`
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  font-family: arial;
 `;
 
 export const FormGroup = styled.div`
@@ -443,6 +444,7 @@ export const TurmaInfoCard = styled.div`
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 2rem;
+  font-family: arial;
 `;
 
 export const TurmaInfoGrid = styled.div`
@@ -472,6 +474,7 @@ export const ListsContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   margin-top: 2rem;
+  font-family: arial;
 `;
 
 export const ListSection = styled.div`

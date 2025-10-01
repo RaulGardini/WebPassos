@@ -44,7 +44,7 @@ function AddColaborador() {
                 console.error("Erro ao carregar cargos:", error);
             }
         };
-        
+
         fetchCargos();
     }, []);
 
@@ -100,11 +100,11 @@ function AddColaborador() {
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
-            
+
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-            
+
             if (age < 16 || age > 80) {
                 errors.push("Idade deve estar entre 16 e 80 anos");
             }
@@ -143,7 +143,7 @@ function AddColaborador() {
         }
 
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
-        
+
         // Limpar mensagem quando o usuário começar a digitar
         if (message) {
             setMessage(null);
@@ -200,7 +200,7 @@ function AddColaborador() {
             } else {
                 setSuccess(true);
                 setMessage("Colaborador cadastrado com sucesso!");
-                
+
                 // Limpar formulário após sucesso
                 setTimeout(() => {
                     setFormData({
@@ -240,76 +240,97 @@ function AddColaborador() {
             <Container>
                 <DisplayFlex>
                     <Title>Novo Colaborador</Title>
-                    <TopLine style={{width: '83%'}}></TopLine>
+                    <TopLine style={{ width: '83%' }}></TopLine>
                 </DisplayFlex>
                 <Form onSubmit={handleSubmit}>
                     <DisplayFlex>
-                        <Input
-                            type="text"
-                            name="nome"
-                            placeholder="Nome Completo"
-                            value={formData.nome}
-                            onChange={handleChange}
-                            required
-                        />
-                        <Input
-                            type="email"
-                            name="email"
-                            placeholder="E-mail"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                        <Input
-                            type="text"
-                            name="cpf"
-                            placeholder="CPF (000.000.000-00)"
-                            value={formData.cpf}
-                            onChange={handleChange}
-                            maxLength={14}
-                            required
-                        />
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Nome do colaborador</p>
+                            <Input
+                                type="text"
+                                name="nome"
+                                placeholder="Nome Completo"
+                                value={formData.nome}
+                                onChange={handleChange}
+                                required
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Email do colaborador</p>
+                            <Input
+                                type="email"
+                                name="email"
+                                placeholder="E-mail"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>CPF do colaborador</p>
+                            <Input
+                                type="text"
+                                name="cpf"
+                                placeholder="000.000.000-00"
+                                value={formData.cpf}
+                                onChange={handleChange}
+                                maxLength={14}
+                                required
+                            />
+                        </DisplayFlex>
                     </DisplayFlex>
                     <DisplayFlex>
-                        <Input
-                            type="text"
-                            name="telefone"
-                            placeholder="Telefone ((00) 00000-0000)"
-                            value={formData.telefone}
-                            onChange={handleChange}
-                            maxLength={15}
-                        />
-                        <Select name="sexo" value={formData.sexo} onChange={handleChange}>
-                            <option value="">Selecione o sexo</option>
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
-                        </Select>
-                        <Select 
-                            name="cargo_id" 
-                            value={formData.cargo_id} 
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">Selecione um cargo</option>
-                            {cargos.map((cargo) => (
-                                <option key={cargo.cargo_id} value={cargo.cargo_id.toString()}>
-                                    {cargo.nome_cargo}
-                                </option>
-                            ))}
-                        </Select>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Telefone do colaborador</p>
+                            <Input
+                                type="text"
+                                name="telefone"
+                                placeholder="(00) 00000-0000"
+                                value={formData.telefone}
+                                onChange={handleChange}
+                                maxLength={15}
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Sexo do colaborador</p>
+                            <Select name="sexo" value={formData.sexo} onChange={handleChange}>
+                                <option value="">Selecione o sexo</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </Select>
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Cargo do colaborador</p>
+                            <Select
+                                name="cargo_id"
+                                value={formData.cargo_id}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">Selecione um cargo</option>
+                                {cargos.map((cargo) => (
+                                    <option key={cargo.cargo_id} value={cargo.cargo_id.toString()}>
+                                        {cargo.nome_cargo}
+                                    </option>
+                                ))}
+                            </Select>
+                        </DisplayFlex>
                     </DisplayFlex>
                     <MidLine></MidLine>
-                    <Input
-                        type="date"
-                        name="data_nascimento"
-                        placeholder="Data de Nascimento"
-                        value={formData.data_nascimento}
-                        onChange={handleChange}
-                        required
-                    />
+                    <DisplayFlex style={{ flexDirection: 'column' }}>
+                        <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Data de nascimento do colaborador</p>
+                        <Input
+                            type="date"
+                            name="data_nascimento"
+                            placeholder="Data de Nascimento"
+                            value={formData.data_nascimento}
+                            onChange={handleChange}
+                            required
+                        />
+                    </DisplayFlex>
                     <DisplayFlex>
-                        <BackButton 
-                            type="button" 
+                        <BackButton
+                            type="button"
                             onClick={handleCancel}
                             disabled={loading}
                         >

@@ -1,30 +1,11 @@
 import axios from "axios";
 import type { Aluno, CreateAlunoData, UpdateAlunoData, AlunoFilters } from '../Models/aluno';
+import type { PaginatedResponse, PaginationParams } from "../Pagination/Pagination"
 
 const API_URL = "http://localhost:3000/alunos";
 
-export interface PaginatedResponse<T> {
-    data: T[];
-    pagination: {
-        currentPage: number;
-        totalPages: number;
-        totalItems: number;
-        itemsPerPage: number;
-        hasNext: boolean;
-        hasPrev: boolean;
-    };
-}
-
-export interface PaginationParams {
-  page: number;
-  limit: number;
-}
-
 // GET all alunos with optional pagination
-export const getAlunos = async (
-  filters?: AlunoFilters, 
-  pagination?: PaginationParams
-): Promise<PaginatedResponse<Aluno> | Aluno[]> => {
+export const getAlunos = async (filters?: AlunoFilters, pagination?: PaginationParams): Promise<PaginatedResponse<Aluno> | Aluno[]> => {
   const params: any = {};
   
   // Adiciona filtros apenas se tiverem valores
@@ -58,44 +39,24 @@ export const getAlunos = async (
 
 // GET aluno by id
 export const getAlunoById = async (id: number): Promise<Aluno> => {
-  try {
     const response = await axios.get(`${API_URL}/${id}`);
     return response.data;
-  } catch (error) {
-    console.error('Erro ao buscar aluno:', error);
-    throw error;
-  }
 };
 
 // CREATE aluno
 export const createAluno = async (data: CreateAlunoData): Promise<Aluno> => {
-  try {
     const response = await axios.post(API_URL, data);
     return response.data;
-  } catch (error) {
-    console.error('Erro ao criar aluno:', error);
-    throw error;
-  }
 };
 
 // UPDATE aluno
 export const updateAluno = async (id: number, data: UpdateAlunoData): Promise<Aluno> => {
-  try {
     const response = await axios.put(`${API_URL}/${id}`, data);
     return response.data;
-  } catch (error) {
-    console.error('Erro ao atualizar aluno:', error);
-    throw error;
-  }
 };
 
 // DELETE aluno
 export const deleteAluno = async (id: number): Promise<{ message: string }> => {
-  try {
     const response = await axios.delete(`${API_URL}/${id}`);
     return response.data;
-  } catch (error) {
-    console.error('Erro ao deletar aluno:', error);
-    throw error;
-  }
 };

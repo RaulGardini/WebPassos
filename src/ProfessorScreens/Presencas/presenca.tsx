@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../ProfessorScreens/Header/header';
 import { listarPresencas, atualizarStatusPresenca } from '../../services/presencaService';
-import type { Presenca, ListarPresencasResponse } from '../../services/presencaService';
+import type { Presenca, ListarPresencasResponse } from '../../Models/presenca';
 import { AiOutlineLike, AiOutlineDislike  } from "react-icons/ai";
 import {
   Container,
@@ -69,7 +69,8 @@ const Presencas: React.FC = () => {
     try {
       setAtualizando(presenca.presenca_id);
       
-      await atualizarStatusPresenca(presenca.presenca_id, novoStatus);
+      // Agora passa um objeto com a propriedade status
+      await atualizarStatusPresenca(presenca.presenca_id, { status: novoStatus });
       
       // Atualizar estado local
       setPresencasData(prev => {

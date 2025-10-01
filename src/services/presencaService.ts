@@ -1,45 +1,12 @@
 import axios from "axios";
+import type {
+  UpdatePresencaData,
+  ListarPresencasResponse,
+  CriarPresencasResponse,
+  AtualizarStatusResponse
+} from "../Models/presenca";
 
 const API_URL = "http://localhost:3000/presencas";
-
-export interface Presenca {
-  presenca_id: number;
-  chamada_id: number;
-  aluno_id: number;
-  status: "presente" | "falta";
-  aluno: string;
-}
-
-export interface ListarPresencasResponse {
-  message: string;
-  chamada_id: number;
-  total: number;
-  presentes: number;
-  faltas: number;
-  presencas: Presenca[];
-}
-
-export interface CriarPresencasResponse {
-  message: string;
-  chamada_id: number;
-  total_alunos: number;
-  presencas: Array<{
-    presenca_id: number;
-    chamada_id: number;
-    aluno_id: number;
-    status: "presente" | "falta";
-  }>;
-}
-
-export interface AtualizarStatusResponse {
-  message: string;
-  presenca: {
-    presenca_id: number;
-    chamada_id: number;
-    aluno_id: number;
-    status: "presente" | "falta";
-  };
-}
 
 // POST criar todas as presenças de uma chamada
 export const criarPresencas = async (chamadaId: number): Promise<CriarPresencasResponse> => {
@@ -53,11 +20,11 @@ export const listarPresencas = async (chamadaId: number): Promise<ListarPresenca
   return response.data;
 };
 
-// PATCH atualizar status de uma presença
+// PUT atualizar status de uma presença
 export const atualizarStatusPresenca = async (
   presencaId: number,
-  status: "presente" | "falta"
+  data: UpdatePresencaData
 ): Promise<AtualizarStatusResponse> => {
-  const response = await axios.patch(`${API_URL}/${presencaId}`, { status });
+  const response = await axios.patch(`${API_URL}/${presencaId}`, data);
   return response.data;
 };

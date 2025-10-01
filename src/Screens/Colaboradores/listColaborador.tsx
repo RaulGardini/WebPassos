@@ -22,7 +22,6 @@ import {
     FilterActions,
     FilterButton,
     TableContainer,
-    LoadingState,
     ErrorState,
     EmptyState,
     Table,
@@ -38,6 +37,7 @@ import {
     InfoModal
 } from "./style";
 import { AddButton } from '../../ui/AddButton/style';
+import { LoadingState } from "../../ui/Loading/style";
 import { Container } from '../../ui/Container/style';
 
 function ListColaboradores() {

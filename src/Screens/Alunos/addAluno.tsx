@@ -15,6 +15,7 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { validateCPF } from "../../ui/ValidCPF/validateCPF"
 import { Container } from '../../ui/Container/style';
 
 function AddAlunos() {
@@ -35,6 +36,7 @@ function AddAlunos() {
     const [message, setMessage] = useState<string | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [valido, setValido] = useState<boolean | null>(null);
 
     // Funções de formatação
     const formatCPF = (value: string) => {
@@ -87,28 +89,30 @@ function AddAlunos() {
         const { name, value } = e.target;
         let formattedValue = value;
 
-        // Aplicar formatação específica
         if (name === "cpf") {
             formattedValue = formatCPF(value);
+            const cleanCPF = value.replace(/\D/g, '');
+            if (cleanCPF.length === 11) {
+                setValido(validateCPF(value));
+            } else {
+                setValido(null);
+            }
         } else if (name === "cep") {
             formattedValue = formatCEP(value);
         } else if (name === "telefone") {
             formattedValue = formatPhone(value);
         } else if (name === "nome" || name === "cidade" || name === "responsavel_financeiro") {
-            // Capitalizar primeira letra de cada palavra
             formattedValue = value
                 .toLowerCase()
                 .split(' ')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
         } else if (name === "email") {
-            // Manter email em minúsculas
             formattedValue = value.toLowerCase();
         }
 
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
-        
-        // Limpar mensagem quando o usuário começar a digitar
+
         if (message) {
             setMessage(null);
         }
@@ -132,8 +136,8 @@ function AddAlunos() {
             // Preparar dados para envio (remover formatação)
             const dataToSend: CreateAlunoData = {
                 nome: formData.nome.trim(),
-                email: formData.email.trim(),
-                cpf: formData.cpf.replace(/\D/g, ""),
+                email: formData.email.trim() || undefined,
+                cpf: formData.cpf ? formData.cpf.replace(/\D/g, "") : undefined,
                 telefone: formData.telefone ? formData.telefone.replace(/\D/g, "") : undefined,
                 sexo: formData.sexo ? (formData.sexo as "M" | "F") : undefined,
                 cep: formData.cep ? formData.cep.replace(/\D/g, "") : undefined,
@@ -155,10 +159,10 @@ function AddAlunos() {
 
             // Usar o service em vez de fetch direto
             await createAluno(dataToSend);
-            
+
             setSuccess(true);
             setMessage("Aluno cadastrado com sucesso!");
-            
+
             setTimeout(() => {
                 navigate(`/listAlunos`);
             }, 1000);
@@ -166,13 +170,13 @@ function AddAlunos() {
         } catch (error: any) {
             console.error("Erro ao cadastrar aluno:", error);
             setSuccess(false);
-            
+
             // Tratar diferentes tipos de erro do axios
             if (error.response) {
                 // Erro de resposta da API
-                const errorMessage = error.response.data?.message || 
-                                   error.response.data?.error || 
-                                   "Erro ao cadastrar aluno";
+                const errorMessage = error.response.data?.message ||
+                    error.response.data?.error ||
+                    "Erro ao cadastrar aluno";
                 setMessage(errorMessage);
             } else if (error.request) {
                 // Erro de conexão
@@ -202,90 +206,131 @@ function AddAlunos() {
             <Container>
                 <DisplayFlex>
                     <Title>Novo Aluno</Title>
-                    <TopLine style={{width: '83%'}}></TopLine>
+                    <TopLine style={{ width: '83%' }}></TopLine>
                 </DisplayFlex>
                 <Form onSubmit={handleSubmit}>
                     <DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Nome do aluno(a)</p>
+                            <Input
+                                type="text"
+                                name="nome"
+                                placeholder="Nome"
+                                value={formData.nome}
+                                onChange={handleChange}
+                                required
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Email do responsável</p>
+                            <Input
+                                type="email"
+                                name="email"
+                                placeholder="E-mail"
+                                value={formData.email}
+                                onChange={handleChange}
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>CPF do responsável</p>
+                            <Input
+                                type="text"
+                                name="cpf"
+                                placeholder="000.000.000-00"
+                                value={formData.cpf}
+                                onChange={handleChange}
+                                maxLength={14}
+                            />
+                        </DisplayFlex>
+                        {valido === true && (
+                            <div style={{ marginTop: '3rem', color: '#7bff61ff' }}>
+                                ✓ CPF válido
+                            </div>
+                        )}
+
+                        {valido === false && (
+                            <div style={{ marginTop: '3rem', color: '#ff4343ff' }}>
+                                ✗ CPF inválido
+                            </div>
+                        )}
+                    </DisplayFlex>
+                    <DisplayFlex style={{ flexDirection: 'column' }}>
+                        <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Telefone do responsável</p>
                         <Input
                             type="text"
-                            name="nome"
-                            placeholder="Nome"
-                            value={formData.nome}
+                            name="telefone"
+                            placeholder="(00) 00000-0000"
+                            value={formData.telefone}
                             onChange={handleChange}
-                            required
+                            maxLength={15}
                         />
+                    </DisplayFlex>
+                    <MidLine></MidLine>
+                    <DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Sexo do aluno(a)</p>
+                            <Select name="sexo" value={formData.sexo} onChange={handleChange}>
+                                <option value="">Selecione o sexo</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </Select>
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>CEP do aluno(a)</p>
+                            <Input
+                                type="text"
+                                name="cep"
+                                placeholder="00000-000"
+                                value={formData.cep}
+                                onChange={handleChange}
+                                maxLength={9}
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Cidade do aluno(a)</p>
+                            <Input
+                                type="text"
+                                name="cidade"
+                                placeholder="Cidade"
+                                value={formData.cidade}
+                                onChange={handleChange}
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Endereço do aluno(a)</p>
+                            <Input
+                                type="text"
+                                name="endereco"
+                                placeholder="Endereço"
+                                value={formData.endereco}
+                                onChange={handleChange}
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Responsável Financeiro</p>
+                            <Input
+                                type="text"
+                                name="responsavel_financeiro"
+                                placeholder="Responsável financeiro"
+                                value={formData.responsavel_financeiro}
+                                onChange={handleChange}
+                            />
+                        </DisplayFlex>
+                    </DisplayFlex>
+                    <DisplayFlex style={{ flexDirection: 'column' }}>
+                        <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Data de nascimento do aluno(a)</p>
                         <Input
-                            type="email"
-                            name="email"
-                            placeholder="E-mail"
-                            value={formData.email}
+                            type="date"
+                            name="data_nascimento"
+                            placeholder="Data de Nascimento"
+                            value={formData.data_nascimento}
                             onChange={handleChange}
-                            required
-                        />
-                        <Input
-                            type="text"
-                            name="cpf"
-                            placeholder="CPF (000.000.000-00)"
-                            value={formData.cpf}
-                            onChange={handleChange}
-                            maxLength={14}
                             required
                         />
                     </DisplayFlex>
-                    <Input
-                        type="text"
-                        name="telefone"
-                        placeholder="Telefone ((00) 00000-0000)"
-                        value={formData.telefone}
-                        onChange={handleChange}
-                        maxLength={15}
-                    />
-                    <MidLine></MidLine>
-                    <Select name="sexo" value={formData.sexo} onChange={handleChange}>
-                        <option value="">Selecione o sexo</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Feminino</option>
-                    </Select>
-                    <Input
-                        type="text"
-                        name="cep"
-                        placeholder="CEP (00000-000)"
-                        value={formData.cep}
-                        onChange={handleChange}
-                        maxLength={9}
-                    />
-                    <Input
-                        type="text"
-                        name="cidade"
-                        placeholder="Cidade"
-                        value={formData.cidade}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        type="text"
-                        name="endereco"
-                        placeholder="Endereço"
-                        value={formData.endereco}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        type="text"
-                        name="responsavel_financeiro"
-                        placeholder="Responsável financeiro"
-                        value={formData.responsavel_financeiro}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        type="date"
-                        name="data_nascimento"
-                        placeholder="Data de Nascimento"
-                        value={formData.data_nascimento}
-                        onChange={handleChange}
-                        required
-                    />
                     <DisplayFlex>
-                        <BackButton 
-                            type="button" 
+                        <BackButton
+                            type="button"
                             onClick={handleCancel}
                             disabled={loading}
                         >

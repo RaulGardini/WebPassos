@@ -20,6 +20,7 @@ import {
     TopLine,
     BackButton,
 } from "./style";
+import { LoadingState } from "../../ui/Loading/style";
 import { Container } from '../../ui/Container/style';
 
 function UpdateTurma() {
@@ -139,12 +140,6 @@ function UpdateTurma() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!hasChanges()) {
-            setMessage("Nenhuma alteração foi feita");
-            setMessageType("error");
-            return;
-        }
-
         if (!formData.nome?.trim()) {
             setMessage("Nome da turma é obrigatório");
             setMessageType("error");
@@ -173,27 +168,11 @@ function UpdateTurma() {
         setMessage("");
 
         try {
-            // Preparar dados apenas com campos que foram alterados
-            const dataToSend: any = {};
-
-            Object.keys(formData).forEach(key => {
-                const currentValue = formData[key as keyof UpdateTurmaData];
-                const originalValue = originalData[key as keyof UpdateTurmaData];
-
-                if (currentValue !== originalValue) {
-                    if (currentValue !== undefined) {
-                        dataToSend[key] = currentValue;
-                    }
-                }
-            });
-
-            await updateTurma(turmaId, dataToSend);
+            // Envia todos os dados do formulário
+            await updateTurma(turmaId, formData);
 
             setMessage("Turma atualizada com sucesso!");
             setMessageType("success");
-
-            // Atualizar dados originais
-            setOriginalData({ ...formData });
 
             setTimeout(() => {
                 navigate('/listTurmas');
@@ -233,7 +212,7 @@ function UpdateTurma() {
             <>
                 <Header />
                 <Container>
-                    <Message success={true}>Carregando dados da turma...</Message>
+                    <Message success={true}><LoadingState /></Message>
                 </Container>
             </>
         );
@@ -341,31 +320,31 @@ function UpdateTurma() {
                         </DisplayFlex>
                     </DisplayFlex>
                     <DisplayFlex>
-                    <DisplayFlex style={{ flexDirection: 'column' }}>
-                        <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Mensalidade:</p>
-                        <Input
-                            type="number"
-                            name="mensalidade"
-                            placeholder="Mensalidade (R$)"
-                            value={formData.mensalidade || ""}
-                            onChange={handleInputChange}
-                            min="0"
-                            step="0.01"
-                        />
-                    </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Mensalidade:</p>
+                            <Input
+                                type="number"
+                                name="mensalidade"
+                                placeholder="Mensalidade (R$)"
+                                value={formData.mensalidade || ""}
+                                onChange={handleInputChange}
+                                min="0"
+                                step="0.01"
+                            />
+                        </DisplayFlex>
 
-                    <DisplayFlex style={{ flexDirection: 'column' }}>
-                        <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Capacidade:</p>
-                        <Input
-                            type="number"
-                            name="capacidade"
-                            placeholder="Capacidade"
-                            value={formData.capacidade || ""}
-                            onChange={handleInputChange}
-                            min="0"
-                            step="0.01"
-                        />
-                    </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Capacidade:</p>
+                            <Input
+                                type="number"
+                                name="capacidade"
+                                placeholder="Capacidade"
+                                value={formData.capacidade || ""}
+                                onChange={handleInputChange}
+                                min="0"
+                                step="0.01"
+                            />
+                        </DisplayFlex>
                     </DisplayFlex>
 
                     <DisplayFlex>
@@ -386,9 +365,9 @@ function UpdateTurma() {
 
                         <Button
                             type="submit"
-                            disabled={loading || !hasChanges()}
+                            disabled={loading}
                             style={{
-                                opacity: !hasChanges() ? 0.6 : 1
+                                opacity: loading ? 0.6 : 1
                             }}
                         >
                             {loading ? "Salvando..." : "Salvar"}
@@ -400,17 +379,6 @@ function UpdateTurma() {
                     <Message success={messageType === "success"}>
                         {message}
                     </Message>
-                )}
-
-                {!hasChanges() && (
-                    <div style={{
-                        textAlign: 'center',
-                        color: '#6c757d',
-                        fontSize: '14px',
-                        marginTop: '10px'
-                    }}>
-                        Nenhuma alteração detectada
-                    </div>
                 )}
             </Container>
         </>

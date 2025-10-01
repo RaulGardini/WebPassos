@@ -71,14 +71,13 @@ export const FilterInput = styled.input`
     transition: all 0.2s;
     
     &:focus {
-        outline: none;
-        border-color: #ff0000ff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-    
-    &::placeholder {
-        color: #6c757d;
-    }
+    outline: none;
+    border-color: #ff0000ff;
+  }
+  
+  &.error {
+    border-color: #dc3545;
+  }
 `;
 
 export const FilterActions = styled.div`
@@ -212,6 +211,7 @@ export const Form = styled.form`
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  font-family: arial;
 `;
 
 export const FormGroup = styled.div`
@@ -245,8 +245,7 @@ export const Input = styled.input`
   
   &:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: #ff0000ff;
   }
   
   &.error {
@@ -265,8 +264,7 @@ export const Select = styled.select`
   
   &:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: #ff0000ff;
   }
   
   &.error {
@@ -412,7 +410,6 @@ export const Tab = styled.button<{ active: boolean }>`
 
 export const AlunoInfo = styled.div`
 font-family: 'Arial', sans-serif;
-  background: #f3f3f3ff;
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 2rem;

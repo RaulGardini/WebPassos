@@ -11,15 +11,15 @@ import {
     Button,
     Message,
     TopLine,
-    MidLine,
     BackButton
 } from "./style";
+import { LoadingState } from "../../ui/Loading/style";
 import { Container } from '../../ui/Container/style';
 
 function UpdateFornecedores() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    
+
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
@@ -58,25 +58,25 @@ function UpdateFornecedores() {
             try {
                 const fornecedor = await getFornecedorById(parseInt(id));
                 console.log("Dados do fornecedor recebidos:", fornecedor);
-                
+
                 // Preencher o formulário com os dados do fornecedor (aplicando formatação)
                 setFormData({
                     nome: fornecedor.nome || "",
                     email: fornecedor.email || "",
                     telefone: fornecedor.telefone ? formatPhone(fornecedor.telefone) : "",
                 });
-                
+
                 setMessage(null);
                 setSuccess(false);
-                
+
             } catch (error: any) {
                 console.error("Erro ao buscar fornecedor:", error);
-                
+
                 // Tratamento de erros do axios
                 if (error.response) {
-                    const errorMessage = error.response.data?.message || 
-                                       error.response.data?.error || 
-                                       "Erro ao carregar dados do fornecedor";
+                    const errorMessage = error.response.data?.message ||
+                        error.response.data?.error ||
+                        "Erro ao carregar dados do fornecedor";
                     setMessage(errorMessage);
                 } else if (error.request) {
                     setMessage("Erro de conexão com o servidor");
@@ -112,7 +112,7 @@ function UpdateFornecedores() {
         }
 
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
-        
+
         // Limpar mensagem quando o usuário começar a digitar
         if (message) {
             setMessage(null);
@@ -152,7 +152,7 @@ function UpdateFornecedores() {
 
             setSuccess(true);
             setMessage("Fornecedor atualizado com sucesso!");
-            
+
             // Redirecionar após sucesso
             setTimeout(() => {
                 navigate("/listFornecedores");
@@ -161,12 +161,12 @@ function UpdateFornecedores() {
         } catch (error: any) {
             console.error("Erro ao atualizar fornecedor:", error);
             setSuccess(false);
-            
+
             // Tratamento de erros do axios
             if (error.response) {
-                const errorMessage = error.response.data?.message || 
-                                   error.response.data?.error || 
-                                   "Erro ao atualizar fornecedor";
+                const errorMessage = error.response.data?.message ||
+                    error.response.data?.error ||
+                    "Erro ao atualizar fornecedor";
                 setMessage(errorMessage);
             } else if (error.request) {
                 setMessage("Erro de conexão com o servidor");
@@ -193,18 +193,18 @@ function UpdateFornecedores() {
                     <Title>
                         {loading ? "Carregando..." : "Editar Fornecedor"}
                     </Title>
-                    <TopLine style={{width: '83%'}}></TopLine>
+                    <TopLine style={{ width: '83%' }}></TopLine>
                 </DisplayFlex>
-                
+
                 {loading ? (
-                    <Message success={true}>Carregando dados do fornecedor...</Message>
+                    <Message success={true}><LoadingState /></Message>
                 ) : message && !success ? (
                     // Mostrar erro se houver
                     <>
                         <Message success={false}>{message}</Message>
                         <DisplayFlex>
-                            <BackButton 
-                                type="button" 
+                            <BackButton
+                                type="button"
                                 onClick={handleCancel}
                             >
                                 Voltar
@@ -215,34 +215,42 @@ function UpdateFornecedores() {
                     // Mostrar formulário se não há erro
                     <Form onSubmit={handleSubmit}>
                         <DisplayFlex>
-                            <Input
-                                type="text"
-                                name="nome"
-                                placeholder="Nome do Fornecedor"
-                                value={formData.nome}
-                                onChange={handleChange}
-                                required
-                            />
-                            <Input
-                                type="email"
-                                name="email"
-                                placeholder="E-mail"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
-                            <Input
-                                type="text"
-                                name="telefone"
-                                placeholder="Telefone ((00) 00000-0000)"
-                                value={formData.telefone}
-                                onChange={handleChange}
-                                maxLength={15}
-                            />
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Nome do fornecedor</p>
+                                <Input
+                                    type="text"
+                                    name="nome"
+                                    placeholder="Nome do Fornecedor"
+                                    value={formData.nome}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Email do fornecedor</p>
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    placeholder="E-mail"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Telefone do fornecedor</p>
+                                <Input
+                                    type="text"
+                                    name="telefone"
+                                    placeholder="(00) 00000-0000"
+                                    value={formData.telefone}
+                                    onChange={handleChange}
+                                    maxLength={15}
+                                />
+                            </DisplayFlex>
                         </DisplayFlex>
-                        <MidLine></MidLine>
                         <DisplayFlex>
-                            <BackButton 
-                                type="button" 
+                            <BackButton
+                                type="button"
                                 onClick={handleCancel}
                                 disabled={loadingUpdate}
                             >

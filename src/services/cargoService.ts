@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Cargo } from "../Models/cargo";
+import type { Cargo, CreateCargoData, UpdateCargoData } from "../Models/cargo";
 
 const API_URL = "http://localhost:3000/cargos";
 
@@ -18,13 +18,13 @@ export const getCargoById = async (id: number): Promise<Cargo> => {
 };
 
 // CREATE cargo
-export const createCargo = async (data: Omit<Cargo, "cargo_id">): Promise<Cargo> => {
+export const createCargo = async (data: CreateCargoData): Promise<Cargo> => {
   const response = await axios.post(API_URL, data);
   return response.data;
 };
 
 // UPDATE cargo
-export const updateCargo = async (id: number, data: Partial<Cargo>): Promise<Cargo> => {
+export const updateCargo = async (id: number, data: UpdateCargoData): Promise<Cargo> => {
   const response = await axios.put(`${API_URL}/${id}`, data);
   return response.data;
 };

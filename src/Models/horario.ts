@@ -3,3 +3,13 @@ export interface Horario {
   dia_semana: string;
   horario: string;
 }
+
+export interface CreateHorarioData {
+  dia_semana: string;
+  horario: string;
+}
+
+export interface UpdateHorarioData {
+  dia_semana?: string;
+  horario?: string;
+}

@@ -19,7 +19,6 @@ import {
     FilterActions,
     FilterButton,
     TableContainer,
-    LoadingState,
     ErrorState,
     EmptyState,
     Table,
@@ -32,6 +31,7 @@ import {
     ClearButton,
     EditButton,
 } from "./style";
+import { LoadingState } from "../../ui/Loading/style";
 import { AddButton } from '../../ui/AddButton/style';
 import { Container } from '../../ui/Container/style';
 

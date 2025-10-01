@@ -17,7 +17,6 @@ import {
     DisplayFlex,
     TopLine,
     MidLine,
-    LoadingState,
     ErrorState,
     EmptyState,
     BackButton,
@@ -32,6 +31,7 @@ import {
     StatusBadge,
     MatriculaInfo
 } from "../style";
+import { LoadingState } from "../../../ui/Loading/style";
 import { Container } from '../../../ui/Container/style';
 
 type TabType = 'disponiveis' | 'matriculadas';
@@ -157,9 +157,6 @@ function TurmasAluno() {
                             <FiUser />
                             {aluno.nome}
                         </h3>
-                        <span style={{ color: '#6c757d' }}>
-                            {aluno.email} | {aluno.telefone}
-                        </span>
                     </AlunoInfo>
                 )}
 

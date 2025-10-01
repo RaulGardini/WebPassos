@@ -22,7 +22,6 @@ import {
     FilterActions,
     FilterButton,
     ClearButton,
-    LoadingState,
     ErrorState,
     EmptyState,
     BackButton,
@@ -40,6 +39,7 @@ import {
     TableHeader,
     TableHeaderCell
 } from "../Turmas/style";
+import { LoadingState } from "../../ui/Loading/style";
 import { Container } from '../../ui/Container/style';
 
 function ManageMatriculas() {

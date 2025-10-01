@@ -44,7 +44,7 @@ export const InfoItem = styled.div`
   color: #666;
   
   svg {
-    color: #d80d0dff;
+    color: #ff0000ff;
   }
   
   strong {
@@ -165,7 +165,7 @@ export const ActionButton = styled.button`
   transition: all 0.2s;
   
   &:hover {
-    background: #ff0000ff;
+    background: #ff3939ff;
     color: white;
   }
 `;

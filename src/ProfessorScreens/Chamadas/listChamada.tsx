@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiCalendar } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
@@ -6,6 +6,7 @@ import { MdBackHand } from "react-icons/md";
 import { buscarChamadasPorMes } from '../../services/chamadaService';
 import { criarPresencas } from '../../services/presencaService';
 import Header from "../Header/header";
+import type { Usuario } from '../../Models/chamada';
 import {
     Container,
     Title,
@@ -42,19 +43,47 @@ const MESES = [
 
 function ListChamada() {
     const navigate = useNavigate();
+    const [usuario, setUsuario] = useState<Usuario | null>(null);
     const [chamadas, setChamadas] = useState<Chamada[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
     const [criandoPresenca, setCriandoPresenca] = useState<number | null>(null);
 
+    useEffect(() => {
+        verificarAutenticacao();
+    }, [navigate]);
+
+    const verificarAutenticacao = () => {
+        const usuarioLogado = localStorage.getItem("usuario");
+        
+        if (!usuarioLogado) {
+            navigate("/");
+            return;
+        }
+
+        const dadosUsuario = JSON.parse(usuarioLogado);
+
+        if (dadosUsuario.tipo !== 'Professor') {
+            alert('Acesso negado! Apenas professores podem acessar esta área.');
+            navigate("/");
+            return;
+        }
+
+        setUsuario(dadosUsuario);
+    };
+
     const fetchChamadasPorMes = async (mes: number) => {
+        if (!usuario?.colaborador_id) {
+            setError('Usuário não autenticado');
+            return;
+        }
+
         try {
             setLoading(true);
             setError(null);
 
-            const colaboradorId = 14; // Pegar do usuário logado
-            const data = await buscarChamadasPorMes(colaboradorId, mes);
+            const data = await buscarChamadasPorMes(usuario.colaborador_id, mes);
             setChamadas(data.chamadas || []);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Erro ao carregar chamadas');
@@ -105,6 +134,14 @@ function ListChamada() {
             setCriandoPresenca(null);
         }
     };
+
+    if (!usuario) {
+        return (
+            <Container>
+                <LoadingState />
+            </Container>
+        );
+    }
 
     const currentYear = new Date().getFullYear();
     const primeiroSemestre = MESES.slice(0, 6);

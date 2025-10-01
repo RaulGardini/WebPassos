@@ -11,7 +11,6 @@ import {
     Button,
     Message,
     TopLine,
-    MidLine,
     BackButton
 } from "./style";
 import { Container } from '../../ui/Container/style';
@@ -59,7 +58,7 @@ function AddFornecedores() {
         }
 
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
-        
+
         // Limpar mensagem quando o usuário começar a digitar
         if (message) {
             setMessage(null);
@@ -83,16 +82,16 @@ function AddFornecedores() {
             console.log("Enviando dados:", dataToSend);
 
             await createFornecedor(dataToSend);
-            
+
             setSuccess(true);
             setMessage("Fornecedor cadastrado com sucesso!");
-            
+
             // Limpar formulário após sucesso
-                navigate(`/listFornecedores`);
+            navigate(`/listFornecedores`);
         } catch (error: any) {
             console.error("Erro ao cadastrar fornecedor:", error);
             setSuccess(false);
-            
+
             // Tratar diferentes tipos de erro
             if (error.response?.data?.error) {
                 setMessage(error.response.data.error);
@@ -122,38 +121,46 @@ function AddFornecedores() {
             <Container>
                 <DisplayFlex>
                     <Title>Novo Fornecedor</Title>
-                    <TopLine style={{width: '83%'}}></TopLine>
+                    <TopLine style={{ width: '83%' }}></TopLine>
                 </DisplayFlex>
                 <Form onSubmit={handleSubmit}>
                     <DisplayFlex>
-                        <Input
-                            type="text"
-                            name="nome"
-                            placeholder="Nome do Fornecedor"
-                            value={formData.nome}
-                            onChange={handleChange}
-                            required
-                        />
-                        <Input
-                            type="email"
-                            name="email"
-                            placeholder="E-mail"
-                            value={formData.email}
-                            onChange={handleChange}
-                        />
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Nome do fornecedor</p>
+                            <Input
+                                type="text"
+                                name="nome"
+                                placeholder="Nome do Fornecedor"
+                                value={formData.nome}
+                                onChange={handleChange}
+                                required
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Email do fornecedor</p>
+                            <Input
+                                type="email"
+                                name="email"
+                                placeholder="E-mail"
+                                value={formData.email}
+                                onChange={handleChange}
+                            />
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Telefone do fornecedor</p>
                         <Input
                             type="text"
                             name="telefone"
-                            placeholder="Telefone ((00) 00000-0000)"
+                            placeholder="(00) 00000-0000"
                             value={formData.telefone}
                             onChange={handleChange}
                             maxLength={15}
                         />
+                        </DisplayFlex>
                     </DisplayFlex>
-                    <MidLine></MidLine>
                     <DisplayFlex>
-                        <BackButton 
-                            type="button" 
+                        <BackButton
+                            type="button"
                             onClick={handleCancel}
                             disabled={loading}
                         >

@@ -15,12 +15,14 @@ import {
     MidLine,
     BackButton
 } from "./style";
+import { LoadingState } from "../../ui/Loading/style";
+import { validateCPF } from "../../ui/ValidCPF/validateCPF"
 import { Container } from '../../ui/Container/style';
 
 function UpdateAlunos() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    
+
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
@@ -38,8 +40,9 @@ function UpdateAlunos() {
     const [success, setSuccess] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingUpdate, setLoadingUpdate] = useState<boolean>(false);
+    const [, setCpf] = useState('');
+    const [valido, setValido] = useState<boolean | null>(null);
 
-    // Funções de formatação
     const formatCPF = (value: string) => {
         const cleanValue = value.replace(/\D/g, "");
         if (cleanValue.length <= 11) {
@@ -66,12 +69,10 @@ function UpdateAlunos() {
         return cleanValue.substring(0, 11).replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
     };
 
-    // Função para formatar data para input date
     const formatDateForInput = (dateString: string) => {
         if (!dateString) return "";
         try {
             const date = new Date(dateString);
-            // Verificar se a data é válida
             if (isNaN(date.getTime())) return "";
             return date.toISOString().split('T')[0];
         } catch (error) {
@@ -80,7 +81,6 @@ function UpdateAlunos() {
         }
     };
 
-    // Buscar dados do aluno ao carregar o componente
     useEffect(() => {
         const fetchAluno = async () => {
             if (!id) {
@@ -96,8 +96,7 @@ function UpdateAlunos() {
             try {
                 const aluno = await getAlunoById(parseInt(id));
                 console.log("Dados do aluno recebidos:", aluno);
-                
-                // Preencher o formulário com os dados do aluno (aplicando formatação)
+
                 setFormData({
                     nome: aluno.nome || "",
                     email: aluno.email || "",
@@ -110,18 +109,17 @@ function UpdateAlunos() {
                     responsavel_financeiro: aluno.responsavel_financeiro || "",
                     data_nascimento: aluno.data_nascimento ? formatDateForInput(aluno.data_nascimento) : "",
                 });
-                
+
                 setMessage(null);
                 setSuccess(false);
-                
+
             } catch (error: any) {
                 console.error("Erro ao buscar aluno:", error);
-                
-                // Tratamento de erros do axios
+
                 if (error.response) {
-                    const errorMessage = error.response.data?.message || 
-                                       error.response.data?.error || 
-                                       "Erro ao carregar dados do aluno";
+                    const errorMessage = error.response.data?.message ||
+                        error.response.data?.error ||
+                        "Erro ao carregar dados do aluno";
                     setMessage(errorMessage);
                 } else if (error.request) {
                     setMessage("Erro de conexão com o servidor");
@@ -140,8 +138,9 @@ function UpdateAlunos() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         let formattedValue = value;
+        const valor = e.target.value;
+        setCpf(valor);
 
-        // Aplicar formatação específica
         if (name === "cpf") {
             formattedValue = formatCPF(value);
         } else if (name === "cep") {
@@ -149,20 +148,23 @@ function UpdateAlunos() {
         } else if (name === "telefone") {
             formattedValue = formatPhone(value);
         } else if (name === "nome" || name === "cidade" || name === "responsavel_financeiro") {
-            // Capitalizar primeira letra de cada palavra
             formattedValue = value
                 .toLowerCase()
                 .split(' ')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(' ');
         } else if (name === "email") {
-            // Manter email em minúsculas
             formattedValue = value.toLowerCase();
         }
 
+        if (valor.replace(/\D/g, '').length === 11) {
+            setValido(validateCPF(valor));
+        } else {
+            setValido(null);
+        }
+
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
-        
-        // Limpar mensagem quando o usuário começar a digitar
+
         if (message) {
             setMessage(null);
         }
@@ -178,7 +180,6 @@ function UpdateAlunos() {
                 throw new Error("ID do aluno não encontrado");
             }
 
-            // Preparar dados para envio (remover formatação)
             const dataToSend: UpdateAlunoData = {
                 nome: formData.nome.trim(),
                 email: formData.email.trim(),
@@ -192,7 +193,6 @@ function UpdateAlunos() {
                 data_nascimento: formData.data_nascimento ? new Date(formData.data_nascimento + 'T00:00:00.000Z') : undefined,
             };
 
-            // Remover campos undefined ou vazios
             Object.keys(dataToSend).forEach(key => {
                 const value = dataToSend[key as keyof UpdateAlunoData];
                 if (value === undefined || value === "" || value === null) {
@@ -202,14 +202,12 @@ function UpdateAlunos() {
 
             console.log("Enviando dados:", dataToSend);
 
-            // Usar o service em vez de fetch direto
             const result = await updateAluno(parseInt(id), dataToSend);
             console.log("Resposta da API:", result);
 
             setSuccess(true);
             setMessage("Aluno atualizado com sucesso!");
-            
-            // Redirecionar após sucesso
+
             setTimeout(() => {
                 navigate("/listAlunos");
             }, 1500);
@@ -217,12 +215,11 @@ function UpdateAlunos() {
         } catch (error: any) {
             console.error("Erro ao atualizar aluno:", error);
             setSuccess(false);
-            
-            // Tratamento de erros do axios
+
             if (error.response) {
-                const errorMessage = error.response.data?.message || 
-                                   error.response.data?.error || 
-                                   "Erro ao atualizar aluno";
+                const errorMessage = error.response.data?.message ||
+                    error.response.data?.error ||
+                    "Erro ao atualizar aluno";
                 setMessage(errorMessage);
             } else if (error.request) {
                 setMessage("Erro de conexão com o servidor");
@@ -238,7 +235,6 @@ function UpdateAlunos() {
         navigate("/listAlunos");
     };
 
-    // Debug: mostrar estado atual
     console.log("Estado atual - Loading:", loading, "Message:", message, "FormData:", formData);
 
     return (
@@ -249,18 +245,18 @@ function UpdateAlunos() {
                     <Title>
                         {loading ? "Carregando..." : "Editar Aluno"}
                     </Title>
-                    <TopLine style={{width: '80%'}}></TopLine>
+                    <TopLine style={{ width: '80%' }}></TopLine>
                 </DisplayFlex>
-                
+
                 {loading ? (
-                    <Message success={true}>Carregando dados do aluno...</Message>
+                    <Message success={true}><LoadingState /></Message>
                 ) : message && !success ? (
                     // Mostrar erro se houver
                     <>
                         <Message success={false}>{message}</Message>
                         <DisplayFlex>
-                            <BackButton 
-                                type="button" 
+                            <BackButton
+                                type="button"
                                 onClick={handleCancel}
                             >
                                 Voltar
@@ -268,88 +264,130 @@ function UpdateAlunos() {
                         </DisplayFlex>
                     </>
                 ) : (
-                    // Mostrar formulário se não há erro
                     <Form onSubmit={handleSubmit}>
                         <DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Nome do aluno(a)</p>
+                                <Input
+                                    type="text"
+                                    name="nome"
+                                    placeholder="Nome"
+                                    value={formData.nome}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Email do responsável</p>
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    placeholder="E-mail"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>CPF do responsável</p>
+                                <Input
+                                    type="text"
+                                    name="cpf"
+                                    placeholder="000.000.000-00"
+                                    value={formData.cpf}
+                                    onChange={handleChange}
+                                    maxLength={14}
+                                    required
+                                />
+                            </DisplayFlex>
+                            {valido === true && (
+                                <div style={{marginTop: '3rem', color: '#7bff61ff'}}>
+                                    ✓ CPF válido
+                                </div>
+                            )}
+
+                            {valido === false && (
+                                <div style={{marginTop: '3rem', color: '#ff4343ff'}}>
+                                    ✗ CPF inválido
+                                </div>
+                            )}
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Telefone do responsável</p>
                             <Input
                                 type="text"
-                                name="nome"
-                                placeholder="Nome"
-                                value={formData.nome}
+                                name="telefone"
+                                placeholder="(00) 00000-0000"
+                                value={formData.telefone}
                                 onChange={handleChange}
-                                required
+                                maxLength={15}
                             />
+                        </DisplayFlex>
+                        <MidLine></MidLine>
+                        <DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Sexo do aluno(a)</p>
+                                <Select name="sexo" value={formData.sexo} onChange={handleChange}>
+                                    <option value="">Selecione o sexo</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Feminino</option>
+                                </Select>
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>CEP do aluno(a)</p>
+                                <Input
+                                    type="text"
+                                    name="cep"
+                                    placeholder="00000-000"
+                                    value={formData.cep}
+                                    onChange={handleChange}
+                                    maxLength={9}
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Cidade do aluno(a)</p>
+                                <Input
+                                    type="text"
+                                    name="cidade"
+                                    placeholder="Cidade"
+                                    value={formData.cidade}
+                                    onChange={handleChange}
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Endereço do aluno(a)</p>
+                                <Input
+                                    type="text"
+                                    name="endereco"
+                                    placeholder="Endereço"
+                                    value={formData.endereco}
+                                    onChange={handleChange}
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Responsável Financeiro</p>
+                                <Input
+                                    type="text"
+                                    name="responsavel_financeiro"
+                                    placeholder="Responsável financeiro"
+                                    value={formData.responsavel_financeiro}
+                                    onChange={handleChange}
+                                />
+                            </DisplayFlex>
+                        </DisplayFlex>
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Data de nascimento do aluno(a)</p>
                             <Input
-                                type="email"
-                                name="email"
-                                placeholder="E-mail"
-                                value={formData.email}
+                                type="date"
+                                name="data_nascimento"
+                                placeholder="Data de Nascimento"
+                                value={formData.data_nascimento}
                                 onChange={handleChange}
-                                required
-                            />
-                            <Input
-                                type="text"
-                                name="cpf"
-                                placeholder="CPF (000.000.000-00)"
-                                value={formData.cpf}
-                                onChange={handleChange}
-                                maxLength={14}
                                 required
                             />
                         </DisplayFlex>
-                        <Input
-                            type="text"
-                            name="telefone"
-                            placeholder="Telefone ((00) 00000-0000)"
-                            value={formData.telefone}
-                            onChange={handleChange}
-                            maxLength={15}
-                        />
-                        <MidLine></MidLine>
-                        <Select name="sexo" value={formData.sexo} onChange={handleChange}>
-                            <option value="">Selecione o sexo</option>
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
-                        </Select>
-                        <Input
-                            type="text"
-                            name="cep"
-                            placeholder="CEP (00000-000)"
-                            value={formData.cep}
-                            onChange={handleChange}
-                            maxLength={9}
-                        />
-                        <Input
-                            type="text"
-                            name="cidade"
-                            placeholder="Cidade"
-                            value={formData.cidade}
-                            onChange={handleChange}
-                        />
-                        <Input
-                            type="text"
-                            name="endereco"
-                            placeholder="Endereço"
-                            value={formData.endereco}
-                            onChange={handleChange}
-                        />
-                        <Input
-                            type="text"
-                            name="responsavel_financeiro"
-                            placeholder="Responsável financeiro"
-                            value={formData.responsavel_financeiro}
-                            onChange={handleChange}
-                        />
-                        <Input
-                            type="date"
-                            name="data_nascimento"
-                            placeholder="Data de Nascimento"
-                            value={formData.data_nascimento}
-                            onChange={handleChange}
-                        />
                         <DisplayFlex>
-                            <BackButton 
-                                type="button" 
+                            <BackButton
+                                type="button"
                                 onClick={handleCancel}
                                 disabled={loadingUpdate}
                             >

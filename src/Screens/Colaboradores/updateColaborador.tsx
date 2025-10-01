@@ -21,7 +21,7 @@ function UpdateColaborador() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [cargos, setCargos] = useState<Cargo[]>([]);
-    
+
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
@@ -47,7 +47,7 @@ function UpdateColaborador() {
                 console.error("Erro ao carregar cargos:", error);
             }
         };
-        
+
         fetchCargos();
     }, []);
 
@@ -99,7 +99,7 @@ function UpdateColaborador() {
 
             try {
                 const response = await fetch(`http://localhost:3000/colaboradores/${id}`);
-                
+
                 console.log("Status da resposta:", response.status);
 
                 if (!response.ok) {
@@ -109,7 +109,7 @@ function UpdateColaborador() {
 
                 const colaborador = await response.json();
                 console.log("Dados do colaborador recebidos:", colaborador);
-                
+
                 // Preencher o formulário com os dados do colaborador (aplicando formatação)
                 setFormData({
                     nome: colaborador.nome || "",
@@ -120,10 +120,10 @@ function UpdateColaborador() {
                     data_nascimento: formatDateForInput(colaborador.data_nascimento) || "",
                     cargo_id: colaborador.cargo_id ? colaborador.cargo_id.toString() : "",
                 });
-                
+
                 setMessage(null);
                 setSuccess(false);
-                
+
             } catch (error: any) {
                 console.error("Erro ao buscar colaborador:", error);
                 setMessage(error.message || "Erro ao carregar dados do colaborador");
@@ -169,11 +169,11 @@ function UpdateColaborador() {
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
             const monthDiff = today.getMonth() - birthDate.getMonth();
-            
+
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-            
+
             if (age < 16 || age > 80) {
                 errors.push("Idade deve estar entre 16 e 80 anos");
             }
@@ -212,7 +212,7 @@ function UpdateColaborador() {
         }
 
         setFormData(prev => ({ ...prev, [name]: formattedValue }));
-        
+
         // Limpar mensagem quando o usuário começar a digitar
         if (message) {
             setMessage(null);
@@ -257,7 +257,7 @@ function UpdateColaborador() {
 
             const response = await fetch(`http://localhost:3000/colaboradores/${id}`, {
                 method: "PUT",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(dataToSend),
@@ -272,7 +272,7 @@ function UpdateColaborador() {
             } else {
                 setSuccess(true);
                 setMessage("Colaborador atualizado com sucesso!");
-                
+
                 // Redirecionar após sucesso
                 setTimeout(() => {
                     navigate("/listColaboradores");
@@ -302,9 +302,9 @@ function UpdateColaborador() {
                     <Title>
                         {loading ? "Carregando..." : "Editar Colaborador"}
                     </Title>
-                    <TopLine style={{width: '80%'}}></TopLine>
+                    <TopLine style={{ width: '80%' }}></TopLine>
                 </DisplayFlex>
-                
+
                 {loading ? (
                     <Message success={true}>Carregando dados do colaborador...</Message>
                 ) : message && !success ? (
@@ -312,8 +312,8 @@ function UpdateColaborador() {
                     <>
                         <Message success={false}>{message}</Message>
                         <DisplayFlex>
-                            <BackButton 
-                                type="button" 
+                            <BackButton
+                                type="button"
                                 onClick={handleCancel}
                             >
                                 Voltar
@@ -324,72 +324,93 @@ function UpdateColaborador() {
                     // Mostrar formulário se não há erro
                     <Form onSubmit={handleSubmit}>
                         <DisplayFlex>
-                            <Input
-                                type="text"
-                                name="nome"
-                                placeholder="Nome Completo"
-                                value={formData.nome}
-                                onChange={handleChange}
-                                required
-                            />
-                            <Input
-                                type="email"
-                                name="email"
-                                placeholder="E-mail"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                            />
-                            <Input
-                                type="text"
-                                name="cpf"
-                                placeholder="CPF (000.000.000-00)"
-                                value={formData.cpf}
-                                onChange={handleChange}
-                                maxLength={14}
-                                required
-                            />
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Nome do colaborador</p>
+                                <Input
+                                    type="text"
+                                    name="nome"
+                                    placeholder="Nome Completo"
+                                    value={formData.nome}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Email do colaborador</p>
+                                <Input
+                                    type="email"
+                                    name="email"
+                                    placeholder="E-mail"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>CPF do colaborador</p>
+                                <Input
+                                    type="text"
+                                    name="cpf"
+                                    placeholder="000.000.000-00"
+                                    value={formData.cpf}
+                                    onChange={handleChange}
+                                    maxLength={14}
+                                    required
+                                />
+                            </DisplayFlex>
                         </DisplayFlex>
                         <DisplayFlex>
-                            <Input
-                                type="text"
-                                name="telefone"
-                                placeholder="Telefone ((00) 00000-0000)"
-                                value={formData.telefone}
-                                onChange={handleChange}
-                                maxLength={15}
-                            />
-                            <Select name="sexo" value={formData.sexo} onChange={handleChange}>
-                                <option value="">Selecione o sexo</option>
-                                <option value="M">Masculino</option>
-                                <option value="F">Feminino</option>
-                            </Select>
-                            <Select 
-                                name="cargo_id" 
-                                value={formData.cargo_id} 
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="">Selecione um cargo</option>
-                                {cargos.map((cargo) => (
-                                    <option key={cargo.cargo_id} value={cargo.cargo_id.toString()}>
-                                        {cargo.nome_cargo}
-                                    </option>
-                                ))}
-                            </Select>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Telefone do colaborador</p>
+                                <Input
+                                    type="text"
+                                    name="telefone"
+                                    placeholder="(00) 00000-0000"
+                                    value={formData.telefone}
+                                    onChange={handleChange}
+                                    maxLength={15}
+                                />
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Sexo do colaborador</p>
+                                <Select name="sexo" value={formData.sexo} onChange={handleChange}>
+                                    <option value="">Selecione o sexo</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Feminino</option>
+                                </Select>
+                            </DisplayFlex>
+                            <DisplayFlex style={{ flexDirection: 'column' }}>
+                                <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Cargo do colaborador</p>
+                                <Select
+                                    name="cargo_id"
+                                    value={formData.cargo_id}
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="">Selecione um cargo</option>
+                                    {cargos.map((cargo) => (
+                                        <option key={cargo.cargo_id} value={cargo.cargo_id.toString()}>
+                                            {cargo.nome_cargo}
+                                        </option>
+                                    ))}
+                                </Select>
+                            </DisplayFlex>
                         </DisplayFlex>
                         <MidLine></MidLine>
-                        <Input
-                            type="date"
-                            name="data_nascimento"
-                            placeholder="Data de Nascimento"
-                            value={formData.data_nascimento}
-                            onChange={handleChange}
-                            required
-                        />
+                        <DisplayFlex style={{ flexDirection: 'column' }}>
+                            <p style={{ marginBottom: '-0.5rem', marginLeft: '1.2rem', color: '#666' }}>Data de nascimento do colaborador</p>
+                            <Input
+                                type="date"
+                                name="data_nascimento"
+                                placeholder="Data de Nascimento"
+                                value={formData.data_nascimento}
+                                onChange={handleChange}
+                                required
+                            />
+                        </DisplayFlex>
                         <DisplayFlex>
-                            <BackButton 
-                                type="button" 
+                            <BackButton
+                                type="button"
                                 onClick={handleCancel}
                                 disabled={loadingUpdate}
                             >

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Horario } from "../Models/horario";
+import type { Horario, CreateHorarioData, UpdateHorarioData } from "../Models/horario";
 
 const API_URL = "http://localhost:3000/horarios";
 
@@ -16,13 +16,13 @@ export const getHorarioById = async (id: number): Promise<Horario> => {
 };
 
 // CREATE horário
-export const createHorario = async (data: Omit<Horario, "horario_id">): Promise<Horario> => {
+export const createHorario = async (data: CreateHorarioData): Promise<Horario> => {
   const response = await axios.post(API_URL, data);
   return response.data;
 };
 
 // UPDATE horário
-export const updateHorario = async (id: number, data: Partial<Horario>): Promise<Horario> => {
+export const updateHorario = async (id: number, data: UpdateHorarioData): Promise<Horario> => {
   const response = await axios.put(`${API_URL}/${id}`, data);
   return response.data;
 };
@@ -33,8 +33,8 @@ export const deleteHorario = async (id: number): Promise<{ message: string }> =>
   return response.data;
 };
 
-// NOVA FUNÇÃO: Buscar horários disponíveis para uma turma
-export const getHorariosDisponiveisParaTurma = async (turmaId: number) => {
+// Buscar horários disponíveis para uma turma
+export const getHorariosDisponiveisParaTurma = async (turmaId: number): Promise<Horario[]> => {
   const response = await axios.get(`${API_URL}/disponiveis-para-turma/${turmaId}`);
   return response.data;
 };
