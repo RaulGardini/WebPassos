@@ -14,6 +14,7 @@ export const getAlunos = async (filters?: AlunoFilters, pagination?: PaginationP
   if (filters?.telefone?.trim()) params.telefone = filters.telefone.trim();
   if (filters?.cidade?.trim()) params.cidade = filters.cidade.trim();
   if (filters?.responsavel_financeiro?.trim()) params.responsavel_financeiro = filters.responsavel_financeiro.trim();
+  if (filters?.mes_nascimento !== undefined && filters.mes_nascimento !== null) params.mes_nascimento = filters.mes_nascimento;
   
   // Adiciona parâmetros de paginação se fornecidos
   if (pagination) {

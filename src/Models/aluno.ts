@@ -47,6 +47,7 @@ export interface AlunoFilters {
     telefone?: string;
     cidade?: string;
     responsavel_financeiro?: string;
+    mes_nascimento?: number;
 }
 export interface Modalidade {
   modalidade_id: number;

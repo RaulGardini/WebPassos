@@ -36,6 +36,7 @@ import {
     Modal,
     InfoModal
 } from "./style";
+import CustomSelect from '../../ui/Select/custumSelect';
 import { AddButton } from '../../ui/AddButton/style';
 import { LoadingState } from "../../ui/Loading/style";
 import { Container } from '../../ui/Container/style';
@@ -228,15 +229,16 @@ function ListColaboradores() {
                                 <FaVenusMars />
                                 Sexo
                             </FilterLabel>
-                            <FilterInput
-                                as="select"
+                            <CustomSelect 
                                 value={filters.sexo}
-                                onChange={(e) => handleFilterChange('sexo', e.target.value)}
-                            >
-                                <option value="">Todos</option>
-                                <option value="M">Masculino</option>
-                                <option value="F">Feminino</option>
-                            </FilterInput>
+                                onChange={(value) => handleFilterChange('sexo', value ? String(value) : '')}
+                                options={[
+                                    { value: '', label: 'Todos' },
+                                    { value: 'M', label: 'Masculino' },
+                                    { value: 'F', label: 'Feminino' }
+                                ]}
+                                placeholder="Selecione o Sexo"
+                            />
                         </FilterGroup>
 
                         <FilterGroup>
@@ -244,18 +246,15 @@ function ListColaboradores() {
                                 <FiUsers />
                                 Cargo
                             </FilterLabel>
-                            <FilterInput
-                                as="select"
+                            <CustomSelect 
                                 value={filters.cargo_id}
-                                onChange={(e) => handleFilterChange('cargo_id', e.target.value)}
-                            >
-                                <option value="">Todos os cargos</option>
-                                {cargos.map((cargo) => (
-                                    <option key={cargo.cargo_id} value={cargo.cargo_id.toString()}>
-                                        {cargo.nome_cargo}
-                                    </option>
-                                ))}
-                            </FilterInput>
+                                onChange={(value) => handleFilterChange('cargo_id', value ? String(value) : '')}
+                                options={cargos.map((cargo) => ({
+                                    value: cargo.cargo_id.toString(),
+                                    label: cargo.nome_cargo
+                                }))}
+                                placeholder="Selecione o Sexo"
+                            />
                         </FilterGroup>
 
                         <FilterActions>

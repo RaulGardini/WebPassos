@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 import Header from "../../Header/header";
 import type { Aluno, AlunoFilters } from "../../Models/aluno";
 import { IoAdd } from "react-icons/io5";
-import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiMapPin, FiUsers, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiUsers, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { MdEditSquare, MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaGraduationCap } from "react-icons/fa";
+import { FaEye, FaGraduationCap, FaCalendarAlt } from "react-icons/fa";
 import { getAlunos, deleteAluno } from "../../services/alunoService";
 import type { PaginatedResponse } from "../../Pagination/Pagination";
 
@@ -39,6 +39,7 @@ import {
     PaginationControls,
     PaginationButton
 } from "./style";
+import CustomSelect from '../../ui/Select/custumSelect';
 import { LoadingState } from "../../ui/Loading/style";
 import { AddButton } from '../../ui/AddButton/style';
 import { Container } from '../../ui/Container/style';
@@ -55,27 +56,27 @@ interface PaginationState {
 const ITEMS_PER_PAGE = 35;
 
 const formatters = {
-  cpf: (cpf: string) => cpf?.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") || "",
-  telefone: (telefone: string) => {
-    if (!telefone) return "";
-    const clean = telefone.replace(/\D/g, "");
-    return clean.length === 11
-      ? clean.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
-      : clean.length === 10
-      ? clean.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")
-      : telefone;
-  },
-  sexo: (sexo?: string) => (sexo === "M" ? "Masculino" : sexo === "F" ? "Feminino" : ""),
-  idade: (dateString: string) => {
-    if (!dateString) return "";
-    const hoje = new Date();
-    const nascimento = new Date(dateString);
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const m = hoje.getMonth() - nascimento.getMonth();
-    if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
-    return `${idade} anos`;
-  },
-  data: (dataString?: string) => (dataString ? new Date(dataString).toLocaleDateString("pt-BR") : ""),
+    cpf: (cpf: string) => cpf?.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") || "",
+    telefone: (telefone: string) => {
+        if (!telefone) return "";
+        const clean = telefone.replace(/\D/g, "");
+        return clean.length === 11
+            ? clean.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
+            : clean.length === 10
+                ? clean.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3")
+                : telefone;
+    },
+    sexo: (sexo?: string) => (sexo === "M" ? "Masculino" : sexo === "F" ? "Feminino" : ""),
+    idade: (dateString: string) => {
+        if (!dateString) return "";
+        const hoje = new Date();
+        const nascimento = new Date(dateString);
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const m = hoje.getMonth() - nascimento.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
+        return `${idade} anos`;
+    },
+    data: (dataString?: string) => (dataString ? new Date(dataString).toLocaleDateString("pt-BR") : ""),
 };
 
 function ListAlunos() {
@@ -85,15 +86,15 @@ function ListAlunos() {
     const [error, setError] = useState<string | null>(null);
     const [selectedAluno, setSelectedAluno] = useState<Aluno | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+
     const [filters, setFilters] = useState<AlunoFilters>({
         nome: '',
         email: '',
         telefone: '',
-        cidade: '',
-        responsavel_financeiro: ''
+        responsavel_financeiro: '',
+        mes_nascimento: undefined
     });
-    
+
     const [pagination, setPagination] = useState<PaginationState>({
         currentPage: 1,
         totalPages: 1,
@@ -104,16 +105,16 @@ function ListAlunos() {
     });
 
     const hasActiveFilters = useCallback(() => {
-        return Object.values(filters).some(value => value && value.trim() !== '');
+        return Object.values(filters).some(value => value && value.toString().trim() !== '');
     }, [filters]);
 
     const fetchAlunos = useCallback(async (searchFilters?: AlunoFilters, page: number = 1) => {
         try {
             setLoading(true);
             setError(null);
-            
+
             const result = await getAlunos(searchFilters, { page, limit: ITEMS_PER_PAGE });
-            
+
             if (result && typeof result === 'object' && 'data' in result && 'pagination' in result) {
                 const paginatedResult = result as PaginatedResponse<Aluno>;
                 setAlunos(paginatedResult.data);
@@ -150,7 +151,7 @@ function ListAlunos() {
         fetchAlunos();
     }, [fetchAlunos]);
 
-    const handleFilterChange = (field: keyof AlunoFilters, value: string) => {
+    const handleFilterChange = (field: keyof AlunoFilters, value: string | number | undefined) => {
         setFilters(prev => ({ ...prev, [field]: value }));
     };
 
@@ -164,8 +165,8 @@ function ListAlunos() {
             nome: '',
             email: '',
             telefone: '',
-            cidade: '',
-            responsavel_financeiro: ''
+            responsavel_financeiro: '',
+            mes_nascimento: undefined
         });
         fetchAlunos(undefined, 1);
     };
@@ -181,18 +182,18 @@ function ListAlunos() {
         const pages = [];
         const maxVisible = 5;
         const { currentPage, totalPages } = pagination;
-        
+
         let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
         let end = Math.min(totalPages, start + maxVisible - 1);
-        
+
         if (end - start + 1 < maxVisible) {
             start = Math.max(1, end - maxVisible + 1);
         }
-        
+
         for (let i = start; i <= end; i++) {
             pages.push(i);
         }
-        
+
         return pages;
     };
 
@@ -202,7 +203,7 @@ function ListAlunos() {
         try {
             await deleteAluno(aluno_id);
             alert("Aluno deletado com sucesso!");
-            
+
             const activeFilters = hasActiveFilters() ? filters : undefined;
             fetchAlunos(activeFilters, pagination.currentPage);
         } catch (error) {
@@ -280,20 +281,6 @@ function ListAlunos() {
 
                         <FilterGroup>
                             <FilterLabel>
-                                <FiMapPin />
-                                Cidade
-                            </FilterLabel>
-                            <FilterInput
-                                type="text"
-                                placeholder="Digite a cidade..."
-                                value={filters.cidade}
-                                onChange={(e) => handleFilterChange('cidade', e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
-                            />
-                        </FilterGroup>
-
-                        <FilterGroup>
-                            <FilterLabel>
                                 <FiUsers />
                                 Responsável Financeiro
                             </FilterLabel>
@@ -303,6 +290,34 @@ function ListAlunos() {
                                 value={filters.responsavel_financeiro}
                                 onChange={(e) => handleFilterChange('responsavel_financeiro', e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && applyFilters()}
+                            />
+                        </FilterGroup>
+
+                        <FilterGroup>
+                            <FilterLabel>
+                                <FaCalendarAlt />
+                                Mês de Nascimento
+                            </FilterLabel>
+                            <CustomSelect
+                                value={filters.mes_nascimento || ''}
+                                onChange={(value) => handleFilterChange('mes_nascimento', value ? Number(value) : undefined)}
+
+                                options={[
+                                    { value: '', label: 'Todos os meses' },
+                                    { value: 1, label: 'Janeiro' },
+                                    { value: 2, label: 'Fevereiro' },
+                                    { value: 3, label: 'Março' },
+                                    { value: 4, label: 'Abril' },
+                                    { value: 5, label: 'Maio' },
+                                    { value: 6, label: 'Junho' },
+                                    { value: 7, label: 'Julho' },
+                                    { value: 8, label: 'Agosto' },
+                                    { value: 9, label: 'Setembro' },
+                                    { value: 10, label: 'Outubro' },
+                                    { value: 11, label: 'Novembro' },
+                                    { value: 12, label: 'Dezembro' }
+                                ]}
+                                placeholder="Selecione o mês"
                             />
                         </FilterGroup>
 
