@@ -22,7 +22,7 @@ export const DashboardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin: 0 15rem 4rem;
 `;
 
 export const Card = styled.div`
@@ -47,6 +47,13 @@ export const Card = styled.div`
   &.ocupacao-lotado {
     border-left-color: #dc3545;
   }
+`;
+
+export const GraphicCard = styled.div`
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem;
+  width: 25%;
 `;
 
 export const CardHeader = styled.div`
@@ -131,12 +138,6 @@ export const ProgressFill = styled.div<{ percentage: number; status: string }>`
   }}
 `;
 
-export const LoadingState = styled.div`
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-`;
-
 export const ErrorState = styled.div`
   background: #f8d7da;
   color: #721c24;
@@ -144,4 +145,30 @@ export const ErrorState = styled.div`
   border-radius: 8px;
   margin: 1rem 0;
   border-left: 4px solid #dc3545;
+`;
+
+export const GraficosContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+`;
+
+export const GraphicGrid = styled.div`
+display: flex; 
+flex-direction: column; 
+align-items: center; 
+gap: 1rem; 
+padding: 1rem;
+`;
+
+export const MovContainer = styled.div`
+display: flex; 
+flex-direction: column;
+gap: 0.5rem;
+width: 100%;
+`;
+
+export const RealEncerrContainer = styled.div`
+display: flex;
+align-items: center;
+gap: 0.5rem;
 `;
