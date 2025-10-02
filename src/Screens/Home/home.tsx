@@ -6,20 +6,27 @@ import { MdPeople } from "react-icons/md";
 import { getInfoEscola } from "../../services/homeService";
 import type { EscolaInfoData } from '../../Models/home';
 import { getAulasHoje } from "../../services/turmasHojeService";
+import { getMatriculasMov } from "../../services/matriculasMovService"
+import type { MatriculasMov } from "../../Models/matriculasMov"
 import {
-    Title,
-    TopLine,
-    DisplayFlex,
-    DashboardGrid,
-    Card,
-    CardHeader,
-    CardTitle,
-    CardValue,
-    CardSubtitle,
-    StatusBadge,
-    ProgressBar,
-    ProgressFill,
-    ErrorState
+  Title,
+  TopLine,
+  DisplayFlex,
+  DashboardGrid,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardValue,
+  CardSubtitle,
+  StatusBadge,
+  ProgressBar,
+  ProgressFill,
+  ErrorState,
+  GraficosContainer,
+  GraphicCard,
+  GraphicGrid,
+  MovContainer,
+  RealEncerrContainer
 } from "./style";
 import { LoadingState } from '../../ui/Loading/style';
 import { Container } from '../../ui/Container/style';
@@ -31,6 +38,7 @@ interface AulasHojeData {
 function Home() {
   const [ocupacaoData, setOcupacaoData] = useState<EscolaInfoData | null>(null);
   const [aulasHoje, setAulasHoje] = useState<AulasHojeData | null>(null);
+  const [matriculasMov, setMatriculasMov] = useState<MatriculasMov | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   // const navigate = useNavigate();
@@ -40,14 +48,16 @@ function Home() {
       try {
         setLoading(true);
         setError(null);
-        
-        const [ocupacao, aulas] = await Promise.all([
+
+        const [ocupacao, aulas, matriculasMov] = await Promise.all([
           getInfoEscola(),
-          getAulasHoje()
+          getAulasHoje(),
+          getMatriculasMov()
         ]);
-        
+
         setOcupacaoData(ocupacao);
         setAulasHoje(aulas);
+        setMatriculasMov(matriculasMov);
       } catch (err) {
         console.error('Erro ao carregar dados do dashboard:', err);
         setError('Erro ao carregar dados do dashboard');
@@ -106,34 +116,11 @@ function Home() {
       <Header />
       <Container>
         <DisplayFlex>
-        <Title>Dashboard - WebPassos</Title>
-        <TopLine></TopLine>
+          <Title>Dashboard - WebPassos</Title>
+          <TopLine></TopLine>
         </DisplayFlex>
-        
-        <DashboardGrid>
-          {/* Card de Ocupação Total */}
-          <Card className={`ocupacao-${ocupacaoData?.status_ocupacao}`}>
-            <CardHeader>
-              <CardTitle>
-                <FiUsers />
-                Ocupação Geral
-              </CardTitle>
-              <StatusBadge status={ocupacaoData?.status_ocupacao || 'baixa'}>
-                {ocupacaoData?.status_ocupacao || 'N/A'}
-              </StatusBadge>
-            </CardHeader>
-            <CardValue>{ocupacaoData?.porcentagem_ocupacao || 0}%</CardValue>
-            <CardSubtitle>
-              {getStatusMessage(ocupacaoData?.status_ocupacao || 'baixa')}
-            </CardSubtitle>
-            <ProgressBar>
-              <ProgressFill 
-                percentage={ocupacaoData?.porcentagem_ocupacao || 0}
-                status={ocupacaoData?.status_ocupacao || 'baixa'}
-              />
-            </ProgressBar>
-          </Card>
 
+        <DashboardGrid>
           {/* Card de Matrículas Ativas */}
           <Card>
             <CardHeader>
@@ -172,10 +159,10 @@ function Home() {
             </CardHeader>
             <CardValue>{aulasHoje?.total_aulas || 0}</CardValue>
             <CardSubtitle>
-              {new Date().toLocaleDateString('pt-BR', { 
-                weekday: 'long', 
-                day: '2-digit', 
-                month: '2-digit' 
+              {new Date().toLocaleDateString('pt-BR', {
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit'
               })}
             </CardSubtitle>
           </Card>
@@ -292,6 +279,101 @@ function Home() {
             </CardSubtitle>
           </Card>
         </DashboardGrid>
+        <GraficosContainer>
+          <GraphicCard className={`ocupacao-${ocupacaoData?.status_ocupacao}`}>
+            <CardHeader>
+              <CardTitle>
+                <FiUsers />
+                Ocupação Geral
+              </CardTitle>
+              <StatusBadge status={ocupacaoData?.status_ocupacao || 'baixa'}>
+                {ocupacaoData?.status_ocupacao || 'N/A'}
+              </StatusBadge>
+            </CardHeader>
+            <CardValue>{ocupacaoData?.porcentagem_ocupacao || 0}%</CardValue>
+            <CardSubtitle>
+              {getStatusMessage(ocupacaoData?.status_ocupacao || 'baixa')}
+            </CardSubtitle>
+            <ProgressBar>
+              <ProgressFill
+                percentage={ocupacaoData?.porcentagem_ocupacao || 0}
+                status={ocupacaoData?.status_ocupacao || 'baixa'}
+              />
+            </ProgressBar>
+          </GraphicCard>
+
+          <GraphicCard>
+            <CardHeader>
+              <CardTitle>
+                <FiActivity />
+                Matrículas - Status
+              </CardTitle>
+            </CardHeader>
+            <GraphicGrid>
+              <svg width="180" height="180" viewBox="0 0 200 200">
+                {(() => {
+                  const realizadas = matriculasMov?.total_realizadas || 0;
+                  const encerradas = matriculasMov?.total_encerradas || 0;
+                  const total = realizadas + encerradas;
+                  
+                  if (total === 0) {
+                    return (
+                      <>
+                        <circle cx="100" cy="100" r="80" fill="none" stroke="#e9ecef" strokeWidth="40" />
+                        <text x="100" y="105" textAnchor="middle" fontSize="20" fill="#666" fontWeight="bold">0</text>
+                      </>
+                    );
+                  }
+                  
+                  const percent = (realizadas / total) * 100;
+                  const circumference = 2 * Math.PI * 80;
+                  const realizadasLength = (percent / 100) * circumference;
+                  const encerradasLength = circumference - realizadasLength;
+                  
+                  return (
+                    <>
+                      {/* Círculo de fundo (encerradas) */}
+                      <circle
+                        cx="100"
+                        cy="100"
+                        r="80"
+                        fill="none"
+                        stroke="#dc3545"
+                        strokeWidth="40"
+                      />
+                      {/* Círculo sobreposto (realizadas) */}
+                      <circle
+                        cx="100"
+                        cy="100"
+                        r="80"
+                        fill="none"
+                        stroke="#28a745"
+                        strokeWidth="40"
+                        strokeDasharray={`${realizadasLength} ${encerradasLength}`}
+                        strokeDashoffset={circumference / 4}
+                        transform="rotate(-90 100 100)"
+                      />
+                    </>
+                  );
+                })()}
+              </svg>
+              <MovContainer>
+                <RealEncerrContainer>
+                  <div style={{ width: '16px', height: '16px', background: '#28a745', borderRadius: '3px' }}></div>
+                  <span style={{ fontSize: '0.9rem', color: '#333', fontWeight: '500' }}>
+                    Realizadas: <strong>{matriculasMov?.total_realizadas || 0}</strong>
+                  </span>
+                </RealEncerrContainer>
+                <RealEncerrContainer>
+                  <div style={{ width: '16px', height: '16px', background: '#dc3545', borderRadius: '3px' }}></div>
+                  <span style={{ fontSize: '0.9rem', color: '#333', fontWeight: '500' }}>
+                    Encerradas: <strong>{matriculasMov?.total_encerradas || 0}</strong>
+                  </span>
+                </RealEncerrContainer>
+              </MovContainer>
+            </GraphicGrid>
+          </GraphicCard>
+        </GraficosContainer>
       </Container>
     </>
   );
