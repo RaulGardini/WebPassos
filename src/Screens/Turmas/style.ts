@@ -64,21 +64,20 @@ export const FilterLabel = styled.label`
 `;
 
 export const FilterInput = styled.input`
-    padding: 5px 6px;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
     border: 1px solid #ced4da;
     border-radius: 6px;
     font-size: 14px;
     transition: all 0.2s;
     
     &:focus {
-        outline: none;
-        border-color: #ff0000ff;
-        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-    }
-    
-    &::placeholder {
-        color: #6c757d;
-    }
+    outline: none;
+    border-color: #ff0000ff;
+  }
+  
+  &.error {
+    border-color: #dc3545;
+  }
 `;
 
 export const FilterActions = styled.div`

@@ -43,6 +43,7 @@ import {
     Modal,
     InfoModal
 } from "./style";
+import CustomSelect from '../../ui/Select/custumSelect';
 import { LoadingState } from "../../ui/Loading/style";
 import { AddButton } from '../../ui/AddButton/style';
 import { Container } from '../../ui/Container/style';
@@ -64,7 +65,7 @@ function ListTurmas() {
         modalidade_id: '',
         sala_id: ''
     });
-    
+
     const [selectedTurma, setSelectedTurma] = useState<Turma | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -84,7 +85,7 @@ function ListTurmas() {
                 console.error('Erro ao carregar dados auxiliares:', error);
             }
         };
-        
+
         loadAuxiliaryData();
     }, []);
 
@@ -157,7 +158,7 @@ function ListTurmas() {
     // Função para formatar horários
     const formatHorarios = (horarios: any[]) => {
         if (!horarios || horarios.length === 0) return 'Sem horários';
-        
+
         return horarios.map(h => `${h.dia_semana}: ${h.horario}`).join(' | ');
     };
 
@@ -228,20 +229,17 @@ function ListTurmas() {
                         <FilterGroup>
                             <FilterLabel>
                                 <FiUsers />
-                                Professor
+                                Professor 1
                             </FilterLabel>
-                            <FilterInput
-                                as="select"
-                                value={filters.professor1_id}
-                                onChange={(e) => handleFilterChange('professor1_id', e.target.value)}
-                            >
-                                <option value="">Todos os professores</option>
-                                {colaboradores.map((colaborador) => (
-                                    <option key={colaborador.colaborador_id} value={colaborador.colaborador_id.toString()}>
-                                        {colaborador.nome}
-                                    </option>
-                                ))}
-                            </FilterInput>
+                            <CustomSelect
+                                value={filters.professor1_id || ''}
+                                onChange={(value) => handleFilterChange('professor1_id', value ? String(value) : '')}
+                                options={colaboradores.map((colaborador) => ({
+                                    value: colaborador.colaborador_id.toString(),
+                                    label: colaborador.nome
+                                }))}
+                                placeholder="Todos os professores"
+                            />
                         </FilterGroup>
 
                         <FilterGroup>
@@ -249,15 +247,17 @@ function ListTurmas() {
                                 <FiUsers />
                                 Status
                             </FilterLabel>
-                            <FilterInput
-                                as="select"
-                                value={filters.status}
-                                onChange={(e) => handleFilterChange('status', e.target.value)}
-                            >
-                                <option value="">Todos</option>
-                                <option value="ativa">Ativa</option>
-                                <option value="inativa">Inativa</option>
-                            </FilterInput>
+                            <CustomSelect
+                                value={filters.status || ''}
+                                onChange={(value) => handleFilterChange('status', value ? String(value) : '')}
+
+                                options={[
+                                    { value: '', label: 'Todos' },
+                                    { value: 'ativa', label: 'Ativa' },
+                                    { value: 'inativa', label: 'Inativa' }
+                                ]}
+                                placeholder="Todos"
+                            />
                         </FilterGroup>
 
                         <FilterGroup>
@@ -265,18 +265,15 @@ function ListTurmas() {
                                 <FiHome />
                                 Sala
                             </FilterLabel>
-                            <FilterInput
-                                as="select"
-                                value={filters.sala_id}
-                                onChange={(e) => handleFilterChange('sala_id', e.target.value)}
-                            >
-                                <option value="">Todas as salas</option>
-                                {salas.map((sala) => (
-                                    <option key={sala.sala_id} value={sala.sala_id.toString()}>
-                                        {sala.nome_sala}
-                                    </option>
-                                ))}
-                            </FilterInput>
+                            <CustomSelect
+                                value={filters.sala_id || ''}
+                                onChange={(value) => handleFilterChange('sala_id', value ? String(value) : '')}
+                                options={salas.map((sala) => ({
+                                    value: sala.sala_id.toString(),
+                                    label: sala.nome_sala
+                                }))}
+                                placeholder="Todas as salas"
+                            />
                         </FilterGroup>
 
                         <FilterGroup>
@@ -284,18 +281,15 @@ function ListTurmas() {
                                 <FiUsers />
                                 Modalidade
                             </FilterLabel>
-                            <FilterInput
-                                as="select"
-                                value={filters.modalidade_id}
-                                onChange={(e) => handleFilterChange('modalidade_id', e.target.value)}
-                            >
-                                <option value="">Todas as modalidades</option>
-                                {modalidades.map((modalidade) => (
-                                    <option key={modalidade.modalidade_id} value={modalidade.modalidade_id.toString()}>
-                                        {modalidade.nome_modalidade}
-                                    </option>
-                                ))}
-                            </FilterInput>
+                            <CustomSelect
+                                value={filters.modalidade_id || ''}
+                                onChange={(value) => handleFilterChange('modalidade_id', value ? String(value) : '')}
+                                options={modalidades.map((modalidade) => ({
+                                    value: modalidade.modalidade_id.toString(),
+                                    label: modalidade.nome_modalidade
+                                }))}
+                                placeholder="Todas as modalidades"
+                            />
                         </FilterGroup>
 
                         <FilterActions>
@@ -361,9 +355,8 @@ function ListTurmas() {
                                                 padding: '0.25rem 0.5rem',
                                                 borderRadius: '4px',
                                                 fontSize: '0.875rem',
-                                                fontWeight: '500',
-                                                backgroundColor: turma.status === 'ativa' ? '#d4edda' : '#f8d7da',
-                                                color: turma.status === 'ativa' ? '#155724' : '#721c24'
+                                                fontWeight: '550',
+                                                color: turma.status === 'ativa' ? '#22e750ff' : '#e72434ff',
                                             }}>
                                                 {formatStatus(turma.status)}
                                             </span>
@@ -403,7 +396,7 @@ function ListTurmas() {
                 </TableContainer>
 
                 {/* Modal de Detalhes */}
-                {isModalOpen && selectedTurma &&  (
+                {isModalOpen && selectedTurma && (
                     <Modal>
                         <InfoModal>
                             <h2>Detalhes da Turma</h2>
@@ -419,7 +412,7 @@ function ListTurmas() {
                             <p><strong>Vagas disponíveis:</strong> {turmaInfo?.vagas_disponiveis}</p>
                             <p><strong>Alunas:</strong> {turmaInfo?.matriculas_ativas}</p>
                             <p><strong>Data de Criação:</strong> {formatDataCriacao(selectedTurma.data_criacao)}</p>
-                            
+
                             <div style={{ marginTop: '1rem' }}>
                                 <strong>Horários:</strong>
                                 {selectedTurma.horarios && selectedTurma.horarios.length > 0 ? (

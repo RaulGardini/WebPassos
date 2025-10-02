@@ -64,7 +64,7 @@ export const FilterLabel = styled.label`
 `;
 
 export const FilterInput = styled.input`
-    padding: 5px 6px;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
     border: 1px solid #ced4da;
     border-radius: 6px;
     font-size: 14px;
