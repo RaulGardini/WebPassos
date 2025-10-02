@@ -16,6 +16,7 @@ import ListColaborador from "./Screens/Colaboradores/listColaborador";
 import AddColaborador from "./Screens/Colaboradores/addColaborador";
 import UpdateColaborador from "./Screens/Colaboradores/updateColaborador";
 import ListChamada from "./Screens/Colaboradores/Chamada/listChamada"
+import PresencasAdmin from "./Screens/Colaboradores/Chamada/Presenca/presencaAdmin"
 //Escola
 import ListEscola from "./Screens/Escola/listEscola";
 // Horarios
@@ -56,6 +57,7 @@ function App() {
         <Route path="/addColaboradores" element={<AddColaborador />} />
         <Route path="/updateColaborador/:id" element={<UpdateColaborador />} />
         <Route path="/listChamada/:id" element={<ListChamada />} />
+        <Route path="/presencasAdmin/:chamada_id" element={<PresencasAdmin />} />
         {/* Escola */}
         <Route path="/listEscolas" element={<ListEscola />} />
         {/* Horarios */}

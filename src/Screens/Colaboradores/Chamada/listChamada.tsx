@@ -5,6 +5,7 @@ import { FiCalendar, FiArrowLeft } from "react-icons/fi";
 import { IoArrowBack } from "react-icons/io5";
 import { MdBackHand } from "react-icons/md";
 import { buscarChamadasPorMes } from '../../../services/chamadaService';
+import { criarPresencas } from '../../../services/presencaService';
 import {
     Title,
     DisplayFlex,
@@ -50,23 +51,24 @@ function ListChamadas() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+    const [criandoPresenca, setCriandoPresenca] = useState<number | null>(null);
 
     const fetchChamadasPorMes = async (mes: number) => {
-    if (!id) return;
+        if (!id) return;
 
-    try {
-        setLoading(true);
-        setError(null);
+        try {
+            setLoading(true);
+            setError(null);
 
-        const data = await buscarChamadasPorMes(Number(id), mes);
-        setChamadas(data.chamadas || []);
-    } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro desconhecido');
-        setChamadas([]);
-    } finally {
-        setLoading(false);
-    }
-};
+            const data = await buscarChamadasPorMes(Number(id), mes);
+            setChamadas(data.chamadas || []);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Erro desconhecido');
+            setChamadas([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleMonthSelect = (mes: number) => {
         setSelectedMonth(mes);
@@ -82,6 +84,32 @@ function ListChamadas() {
     const formatDate = (dateString: string) => {
         const [year, month, day] = dateString.split('-');
         return `${day}/${month}/${year}`;
+    };
+
+    const handleVerPresenca = async (chamadaId: number) => {
+        if (criandoPresenca === chamadaId) return;
+
+        try {
+            setCriandoPresenca(chamadaId);
+
+            // Tentar criar as presenças (se já existirem, vai para o catch)
+            try {
+                const resultadoPresencas = await criarPresencas(chamadaId);
+                console.log('Presenças criadas:', resultadoPresencas);
+            } catch (presencaError: any) {
+                // Se já existem presenças, apenas continuar para navegação
+                console.log('Presenças já existem ou erro:', presencaError);
+            }
+
+            // Navegar para tela de presença
+            navigate(`/presencasAdmin/${chamadaId}`);
+
+        } catch (error: any) {
+            console.error('Erro ao processar presença:', error);
+            alert('Erro ao acessar presenças. Tente novamente.');
+        } finally {
+            setCriandoPresenca(null);
+        }
     };
 
     const currentYear = new Date().getFullYear();
@@ -180,7 +208,9 @@ function ListChamadas() {
                                             <TableCell>{formatDate(chamada.data_aula)}</TableCell>
                                             <ActionButtons>
                                                 <EditButton
+                                                    onClick={() => handleVerPresenca(chamada.chamada_id)}
                                                     title="Ver Presença"
+                                                    disabled={criandoPresenca === chamada.chamada_id}
                                                 >
                                                     <MdBackHand />
                                                 </EditButton>

@@ -4,6 +4,7 @@ import { MdCalendarMonth } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import { gerarChamadasMes } from "../../services/chamadaService";
+import type { Usuario } from '../../Models/chamada';
 import {
     HeaderContainer,
     Menu,
@@ -16,11 +17,21 @@ import {
 
 function Header() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [usuario, setUsuario] = useState<Usuario | null>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
+    // Buscar dados do usuário logado
+    useEffect(() => {
+        const usuarioLogado = localStorage.getItem("usuario");
+        if (usuarioLogado) {
+            const dadosUsuario = JSON.parse(usuarioLogado);
+            setUsuario(dadosUsuario);
+        }
+    }, []);
+
     const handleToggleMenu = () => {
-        setDropdownOpen((prev) => !prev); // abre/fecha no clique do botão
+        setDropdownOpen((prev) => !prev);
     };
 
     // Detecta clique fora
@@ -37,9 +48,13 @@ function Header() {
     }, []);
 
     const handleGerarChamadas = async () => {
+        if (!usuario?.colaborador_id) {
+            alert("Usuário não autenticado");
+            return;
+        }
+
         try {
-            const colaboradorId = 14; // pegar do usuário logado
-            const response = await gerarChamadasMes(colaboradorId);
+            const response = await gerarChamadasMes(usuario.colaborador_id);
             alert(response.message);
         } catch (error) {
             alert(
