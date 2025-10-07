@@ -230,7 +230,7 @@ function ListColaboradores() {
                                 Sexo
                             </FilterLabel>
                             <CustomSelect 
-                                value={filters.sexo}
+                                value={filters.sexo || ''}
                                 onChange={(value) => handleFilterChange('sexo', value ? String(value) : '')}
                                 options={[
                                     { value: '', label: 'Todos' },
@@ -247,7 +247,7 @@ function ListColaboradores() {
                                 Cargo
                             </FilterLabel>
                             <CustomSelect 
-                                value={filters.cargo_id}
+                                value={filters.cargo_id || ''}
                                 onChange={(value) => handleFilterChange('cargo_id', value ? String(value) : '')}
                                 options={cargos.map((cargo) => ({
                                     value: cargo.cargo_id.toString(),

@@ -7,11 +7,12 @@ const API_URL = "http://localhost:3000/colaboradores";
 export const getColaboradores = async (filters?: ColaboradorFilters): Promise<Colaborador[]> => {
   const params: any = {};
   
-  if (filters?.nome) params.nome = filters.nome;
-  if (filters?.email) params.email = filters.email;
-  if (filters?.cpf) params.cpf = filters.cpf;
-  if (filters?.sexo) params.sexo = filters.sexo;
-  if (filters?.cargo_id) params.cargo_id = filters.cargo_id;
+  // Só adiciona aos params se o filtro tiver valor
+  if (filters?.nome && filters.nome.trim()) params.nome = filters.nome.trim();
+  if (filters?.email && filters.email.trim()) params.email = filters.email.trim();
+  if (filters?.cpf && filters.cpf.trim()) params.cpf = filters.cpf.trim();
+  if (filters?.sexo && filters.sexo.trim()) params.sexo = filters.sexo.trim();
+  if (filters?.cargo_id && filters.cargo_id.trim()) params.cargo_id = filters.cargo_id.trim();
   
   const response = await axios.get(API_URL, { params });
   return response.data;

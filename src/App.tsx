@@ -36,6 +36,9 @@ import AddFornecedor from "./Screens/Fornecedores/addFornecedores";
 import UpdateFornecedor from "./Screens/Fornecedores/updateFornecedor"
 // Gerenciar Usuários
 import GerenciarUsuarios from "./Screens/GerenciarUsuarios/gerenciarUsuarios";
+// folha pagamento
+import FolhaPagamento from "./Screens/FolhaPagamento/folhaPagamento"
+import ConfigFolhaPagamento from "./Screens/FolhaPagamento/configFolhaPagamento";
 
 function App() {
   return (
@@ -75,8 +78,11 @@ function App() {
         <Route path="/listFornecedores" element={<ListFornecedor />} />
         <Route path="/addFornecedores" element={<AddFornecedor />} />
         <Route path="/updateFornecedores/:id" element={<UpdateFornecedor />} />
-        {/* Fornecedor */}
+        {/* Usuario */}
         <Route path="/gerenciarUsuarios" element={<GerenciarUsuarios />} />
+        {/* FolhaPagamento */}
+        <Route path="/folhaPagamento" element={<FolhaPagamento />} />
+        <Route path="/configFolhaPagamento" element={<ConfigFolhaPagamento />} />
       </Routes>
     </BrowserRouter>
   );

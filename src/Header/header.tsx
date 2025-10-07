@@ -8,6 +8,7 @@ import { IoTimeOutline } from "react-icons/io5";
 import { SiGoogleclassroom } from "react-icons/si";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
+import { LuFileSpreadsheet } from "react-icons/lu";
 import {
   HeaderContainer,
   LeftMenu,
@@ -43,6 +44,7 @@ function Header() {
               <DropdownItem onClick={() => navigate("/listHorarios")}><IoTimeOutline style={{ fontSize: "1.5rem" }} /> Horários</DropdownItem>
               <DropdownItem onClick={() => navigate("/listTurmas")}><SiGoogleclassroom style={{ fontSize: "1.5rem" }} /> Turmas</DropdownItem>
               <DropdownItem onClick={() => navigate("/gerenciarUsuarios")}><RiUserSettingsLine style={{ fontSize: "1.5rem" }} /> Usuarios</DropdownItem>
+              <DropdownItem onClick={() => navigate("/folhaPagamento")}><LuFileSpreadsheet style={{ fontSize: "1.5rem" }} /> Folha de pagameento</DropdownItem>
             </DropdownMenu>
           )}
         </Menu>
