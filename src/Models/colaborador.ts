@@ -33,9 +33,9 @@ export interface UpdateColaboradorData {
 }
 
 export interface ColaboradorFilters {
-  nome: string;
-  email: string;
-  cpf: string;
-  sexo: string;
-  cargo_id: string;
+  nome?: string;
+  email?: string;
+  cpf?: string;
+  sexo?: string;
+  cargo_id?: string;
 }
