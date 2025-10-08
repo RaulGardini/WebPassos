@@ -90,7 +90,6 @@ function Home() {
         <Header />
         <Container>
           <LoadingState>
-            Carregando dashboard...
           </LoadingState>
         </Container>
       </>
