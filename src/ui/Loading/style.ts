@@ -19,8 +19,8 @@ export const LoadingState = styled.div`
         height: 50px;
         border-radius: 50%;
         border: 3px solid #f3f3f320;
-        border-top: 3px solid #d6da15ff;
-        border-right: 3px solid #d6da15ff;
+        border-top: 3px solid #ff0000ff;
+        border-right: 3px solid #ff0000ff;
         animation: spin 1s linear infinite;
     }
 
@@ -34,8 +34,8 @@ export const LoadingState = styled.div`
         height: 38px;
         border-radius: 50%;
         border: 3px solid transparent;
-        border-bottom: 3px solid #272727ff;
-        border-left: 3px solid #272727ff;
+        border-bottom: 3px solid #ff6666ff;
+        border-left: 3px solid #ff6666ff;
         animation: spin 1.5s linear infinite reverse;
     }
 
