@@ -564,3 +564,78 @@ export const PaginationButton = styled.button<{ disabled?: boolean; active?: boo
         opacity: 0.6;
     }
 `;
+
+export const EmptyMessage = styled.div`
+    text-align: center;
+    padding: 3rem;
+    font-size: 1.1rem;
+    color: #6c757d;
+`;
+
+export const InputWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    justify-content: center;
+`;
+
+export const InputLabel = styled.span<{ active?: boolean }>`
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: ${props => props.active ? '#007bff' : '#6c757d'};
+    min-width: 20px;
+`;
+
+export const EditableInput = styled.input<{ hasValue?: boolean }>`
+    width: 60px;
+    padding: 0.4rem 0.6rem;
+    border: 2px solid ${props => props.hasValue ? '#ff0000ff' : '#ced4da'};
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+    background-color: ${props => props.hasValue ? '#f0f8ff' : '#fff'};
+    transition: all 0.2s;
+    
+    &:focus {
+        outline: none;
+        border-color: none;
+        background-color: #fff;
+    }
+
+    &:hover {
+        border-color: #ff0000ff;
+    }
+`;
+
+export const SaveButton = styled.button`
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    
+    &:hover:not(:disabled) {
+        background-color: #218838;
+        transform: translateY(-1px);
+    }
+    
+    &:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+`;
+
+export const ValorFinalCell = styled(TableCell)`
+    font-weight: 600;
+    color: #28a745;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+`;

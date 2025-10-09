@@ -11,6 +11,7 @@ import ListAluno from "./Screens/Alunos/listAluno";
 import AddAluno from "./Screens/Alunos/addAluno";
 import UpdateAluno from "./Screens/Alunos/updateAluno";
 import TurmasAluno from "./Screens/Alunos/TurmasAlunos/listTurmasAluno";
+import Matriculas from "./Screens/Alunos/Matriculas/listMatriculas";
 //Colaborador
 import ListColaborador from "./Screens/Colaboradores/listColaborador";
 import AddColaborador from "./Screens/Colaboradores/addColaborador";
@@ -55,6 +56,7 @@ function App() {
         <Route path="/addAlunos" element={<AddAluno />} />
         <Route path="/updateAluno/:id" element={<UpdateAluno />} />
         <Route path="/listTurmasAluno/:id" element={<TurmasAluno />} />
+        <Route path="/listMatriculas/:aluno_id" element={<Matriculas />} />
         {/* Colaborador */}
         <Route path="/listColaboradores" element={<ListColaborador />} />
         <Route path="/addColaboradores" element={<AddColaborador />} />

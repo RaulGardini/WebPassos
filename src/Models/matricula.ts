@@ -34,12 +34,15 @@ export interface Matricula {
   matricula_id: number;
   numero_matricula: string;
   aluno_id: number;
-  turma_id: number; // Mudou de number para objeto Turma completo
+  turma_id: number;
+  nome_turma: string;
   status: "ativa" | "inativa";
   valor_matricula: number;
   data_matricula: Date;
+  desconto_perc?: number;
+  desconto_num?: number;
+  valor_final?: number;
   aluno: Aluno;
-  turma?: Turma; // Make sure this is optional
 }
 
 // OU, se turma_id for apenas o ID, crie uma interface separada para matrícula com turma populada:
