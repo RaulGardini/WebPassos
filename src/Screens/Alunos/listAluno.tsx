@@ -3,7 +3,7 @@ import Header from "../../Header/header";
 import type { Aluno, AlunoFilters } from "../../Models/aluno";
 import { IoAdd } from "react-icons/io5";
 import { FiSearch, FiX, FiUser, FiMail, FiPhone, FiUsers, FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { MdEditSquare, MdDelete } from "react-icons/md";
+import { MdEditSquare, MdDelete, MdAttachMoney } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaGraduationCap, FaCalendarAlt } from "react-icons/fa";
 import { getAlunos, deleteAluno } from "../../services/alunoService";
@@ -370,6 +370,12 @@ function ListAlunos() {
                                             <TableCell>{formatters.idade(aluno.data_nascimento || '')}</TableCell>
                                             <TableCell textAlign="center">
                                                 <ActionButtons>
+                                                    <EditButton
+                                                        onClick={() => navigate(`/listMatriculas/${aluno.aluno_id}`)}
+                                                        title="Gerenciar turmas"
+                                                    >
+                                                        <MdAttachMoney />
+                                                    </EditButton>
                                                     <EditButton
                                                         onClick={() => navigate(`/listTurmasAluno/${aluno.aluno_id}`)}
                                                         title="Gerenciar turmas"

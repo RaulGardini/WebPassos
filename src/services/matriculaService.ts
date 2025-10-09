@@ -30,7 +30,7 @@ export const matricularAluno = async (turma_id: number, aluno_id: number) => {
 
 // DELETE matrícula
 export const deletarMatricula = async (matricula_id: number) => {
-  const response = await axios.delete(`${API_URL}/${matricula_id}`);
+  const response = await axios.delete(`${API_URL}/detalhes/${matricula_id}`);
   return response.data;
 };
 
@@ -38,6 +38,12 @@ export const deletarMatricula = async (matricula_id: number) => {
 export const getTurmaInfo = async (turma_id: number): Promise<TurmaInfo> => {
   const response = await axios.get(`${API_URL}/turmas/${turma_id}/info`);
   return response.data.data;
+};
+
+// GET matriculas de um aluno
+export const getMatriculas = async (aluno_id: number) => {
+  const response = await axios.get(`${API_URL}/alunos/${aluno_id}/matriculas`);
+  return response.data;
 };
 
 // GET turmas onde o aluno está matriculado
@@ -55,5 +61,14 @@ export const getTurmasDisponiveis = async (aluno_id: number): Promise<any[]> => 
 // POST matricular aluno em turma específica
 export const matricularAlunoNaTurma = async (aluno_id: number, turma_id: number) => {
   const response = await axios.post(`${API_URL}/alunos/${aluno_id}/matricular/${turma_id}`);
+  return response.data;
+};
+
+// PUT atualizar descontos da matrícula
+export const atualizarDescontos = async (
+  matricula_id: number, 
+  dados: { desconto_perc: number; desconto_num: number }
+) => {
+  const response = await axios.put(`${API_URL}/detalhes/${matricula_id}`, dados);
   return response.data;
 };

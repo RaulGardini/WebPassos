@@ -194,7 +194,6 @@ function UpdateTurmasHorarios() {
                     padding: '15px',
                     margin: '20px 0'
                 }}>
-                    <p><strong>Turma:</strong> {turma?.nome}</p>
                     <p><strong>Horários Selecionados:</strong> {horariosSelecionados.length}</p>
                     <p style={{color: '#666', fontSize: '14px', margin: '10px 0 0 0'}}>
                         Selecione os horários que esta turma terá. Os horários anteriores serão completamente substituídos.
@@ -226,7 +225,7 @@ function UpdateTurmasHorarios() {
                     color: '#333',
                     margin: '30px 0 20px 0',
                     fontSize: '18px',
-                    borderBottom: '2px solid #007bff',
+                    borderBottom: '2px solid #ff0000ff',
                     paddingBottom: '5px'
                 }}>
                     Selecionar Horários por Dia
